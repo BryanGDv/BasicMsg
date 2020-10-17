@@ -1,7 +1,6 @@
 package code.commands;
 
-import code.commands.cache.CacheManager;
-import code.commands.cache.IgnoreCache;
+import code.CacheManager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.modules.PlayerMessage;
@@ -17,7 +16,6 @@ import code.BasicMsg;
 import code.utils.Configuration;
 import code.Manager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -72,7 +70,7 @@ public class IgnoreCommand implements CommandClass{
 
         String targetname = target.getPlayer().getName();
 
-        Map<UUID, List<String>> ignorelist = cache.getIgnorelist().get();
+        Map<UUID, List<String>> ignorelist = cache.getIgnorelist();
         if (ignorelist.containsKey(playeruuid)){
 
             List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");

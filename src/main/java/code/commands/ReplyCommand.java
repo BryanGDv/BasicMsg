@@ -1,6 +1,6 @@
 package code.commands;
 
-import code.commands.cache.CacheManager;
+import code.CacheManager;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.PlayerMessage;

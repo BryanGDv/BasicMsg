@@ -1,7 +1,6 @@
 package code.commands;
 
-import code.commands.cache.CacheManager;
-import code.commands.cache.ReplyCache;
+import code.CacheManager;
 import code.registry.ConfigManager;
 import code.modules.PlayerMessage;
 import me.fixeddev.commandflow.annotated.CommandClass;
@@ -80,7 +79,7 @@ public class MsgCommand implements CommandClass{
                 .replace("%message%", message));
 
         for (Player watcher : Bukkit.getServer().getOnlinePlayers()) {
-            if (cache.getSocialSpy().get().contains(watcher.getUniqueId())) {
+            if (cache.getSocialSpy().contains(watcher.getUniqueId())) {
                 playersender.sendMessage(watcher, command.getString ("commands.socialspy.spy")
                         .replace("%player%", sender.getName())
                         .replace("%arg-1%", target.getName())
@@ -88,7 +87,7 @@ public class MsgCommand implements CommandClass{
             }
         }
 
-        Map<UUID, UUID> reply = cache.getReply().get();
+        Map<UUID, UUID> reply = cache.getReply();
 
         if (!(reply.containsKey(player.getUniqueId()))) {
             reply.put(player.getUniqueId(), target.getUniqueId());

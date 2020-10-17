@@ -1,10 +1,9 @@
 package code.modules;
 
 import code.Manager;
-import code.commands.cache.CacheManager;
-import code.commands.cache.SocialSpyCache;
+import code.CacheManager;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class SocialSpyMethod {
@@ -12,7 +11,8 @@ public class SocialSpyMethod {
     private final Manager manager;
     private final CacheManager cache;
 
-    private SocialSpyCache socialspy;
+    private final Set<UUID> socialspy;
+
     private String status;
 
     public SocialSpyMethod(Manager manager) {
@@ -25,25 +25,25 @@ public class SocialSpyMethod {
     }
     public void toggle(UUID uuid){
 
-        if (socialspy.get().contains(uuid)) {
-            socialspy.get().remove(uuid);
+        if (socialspy.contains(uuid)) {
+            socialspy.remove(uuid);
             status = manager.getFiles().getCommand().getString("commands.socialspy.player.variable-off");
 
         }else{
-            socialspy.get().add(uuid);
+            socialspy.add(uuid);
             status = manager.getFiles().getCommand().getString("commands.socialspy.player.variable-on");
         }
     }
 
     public void set(UUID uuid){
-        socialspy.get().add(uuid);
+        socialspy.add(uuid);
     }
 
     public void unset(UUID uuid){
-        socialspy.get().remove(uuid);
+        socialspy.remove(uuid);
     }
 
-    public HashSet<UUID> getVariable(){
-        return socialspy.get();
+    public Set<UUID> getVariable(){
+        return socialspy;
     }
 }

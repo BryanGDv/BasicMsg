@@ -1,21 +1,22 @@
 package code.registry;
+
 import code.BasicMsg;
 import code.commands.*;
 import code.commands.modules.CustomI18n;
-import code.interfaces.Loader;
 import code.Manager;
+
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
+
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
-import me.fixeddev.commandflow.translator.DefaultTranslator;
 
 
-public class CommandRegistry implements Loader {
+public class CommandRegistry implements LoaderService{
 
     private final Manager manager;
     private final BasicMsg plugin;

@@ -1,8 +1,6 @@
 package code;
 
-import code.commands.cache.CacheManager;
 import code.debug.ErrorManager;
-import code.interfaces.Services;
 import code.modules.MethodManager;
 import code.registry.CommandRegistry;
 import code.registry.ConfigManager;

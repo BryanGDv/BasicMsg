@@ -1,9 +1,8 @@
 package code.commands;
 
 import code.BasicMsg;
+import code.CacheManager;
 import code.Manager;
-import code.commands.cache.CacheManager;
-import code.commands.cache.IgnoreCache;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
@@ -17,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class UnIgnoreCommand implements CommandClass{
@@ -67,9 +67,9 @@ public class UnIgnoreCommand implements CommandClass{
         String targetname = target.getName();
         UUID playeruuid = player.getUniqueId();
 
-        IgnoreCache ignorelist = cache.getIgnorelist();
+        Map<UUID, List<String>> ignorelist = cache.getIgnorelist();
 
-        if (!(ignorelist.get().containsKey(playeruuid))){
+        if (!(ignorelist.containsKey(playeruuid))){
             playersender.sendMessage(sender, messages.getString("error.ignore.anybody"));
             return true;
         }

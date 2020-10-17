@@ -1,14 +1,14 @@
 package code.modules;
 
 import code.Manager;
-import code.commands.cache.CacheManager;
-import code.commands.cache.IgnoreCache;
+import code.CacheManager;
 import code.utils.Configuration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class IgnoreMethod {
@@ -20,13 +20,15 @@ public class IgnoreMethod {
 
     private final CacheManager cache;
 
+    private final Map<UUID, List<String>> ignorelist;
+
 
 
     public IgnoreMethod(Manager manager) {
         this.manager = manager;
-
         // All methods:
         this.cache = manager.getCache();
+        this.ignorelist = cache.getIgnorelist();
         this.players = manager.getFiles().getPlayers();
         this.messages = manager.getFiles().getMessages();
 
@@ -38,18 +40,17 @@ public class IgnoreMethod {
         Player you = (Player) sender;
         UUID uuid = you.getUniqueId();
 
-        IgnoreCache ignorelist = cache.getIgnorelist();
 
         List<String> ignoredPlayers;
 
-        if (ignorelist.get().get(uuid) == null) {
+        if (ignorelist.get(uuid) == null) {
             ignoredPlayers = new ArrayList<>();
         } else {
-            ignoredPlayers = ignorelist.get().get(uuid);
+            ignoredPlayers = ignorelist.get(uuid);
         }
 
         ignoredPlayers.add(player.getName());
-        ignorelist.get().put(uuid, ignoredPlayers);
+        ignorelist.put(uuid, ignoredPlayers);
         players.set("players." + uuid + ".players-ignored", ignoredPlayers);
 
         players.save();
@@ -62,8 +63,7 @@ public class IgnoreMethod {
         Player you = (Player) sender;
         UUID uuid = you.getUniqueId();
 
-        IgnoreCache ignorelist = cache.getIgnorelist();
-        List<String> ignoredPlayers = ignorelist.get().get(uuid);
+        List<String> ignoredPlayers = ignorelist.get(uuid);
 
         ignoredPlayers.remove(player.getName());
         players.set("players." + uuid + ".players-ignored", ignoredPlayers);
