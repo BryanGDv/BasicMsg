@@ -1,0 +1,39 @@
+
+#  List of variables:
+#
+#  %arg-1%: The sender.
+#  %player%: You.
+#  %message%: [OBLIGATORY]: The message, obviously.
+#  %usage&: The usage of the command.#
+
+commands:
+  msg-reply:
+    player: "%c &fYou &8> &f%arg-1% &8: &f%message%"
+    arg-1: "%c &f%player% &8> &fYou &8: &f%message%"
+
+  bmsg:
+    help:
+      - "%c &fPlugin help 1/1"
+      - "&f/msg [<player>] [<message>] &8: &fTo send a private message."
+      - "&f/reply [<message>] &8: &fTo reply."
+      - "&f/bmsg reload &8: &fTo reload the plugin."
+    load: "%c &fReloading plugin..."
+    reload: "%c &fPlugin reloaded!"
+
+  ignore:
+    player-ignored: "%c &fNow you can't watch messages from &c%player%&f."
+    player-unignored: "%c &fNow you can watch messages from &c%player%&f."
+
+  socialspy:
+    player:
+      enabled: "%c &fSocialspy activated"
+      disabled: "%c &fSocialspy disabled"
+      toggle: "%c &fSocialspy %mode%"
+
+      variable-on: "activated"
+      variable-off: "disabled"
+
+    arg-2:
+      enabled: "%c &fSocialspy activated from &c%arg-2%"
+      disabled: "%c &fSocialspy disabled from &c%arg-2%"
+    spy: "&a[SocialSpy] &8| &f%player% &8> &f%arg-1% &8: &f%message%"

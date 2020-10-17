@@ -1,0 +1,18 @@
+# Messages:
+error:
+  console: "%c &fYou can't use this command in the consolpe."
+  player-offline: "%c &fThat player is not online."
+  same-player: "%c &fYou cant talk to yourself."
+  no-arg: "%c &fUnknown argument"
+  unknown-arg: "%c &fUnknown args."
+  no-perms: "%c &fYou don't have permission to do this."
+  no-reply: "%c &fYou didn't talk with anyone."
+  ignore:
+    already-unignored: "&c&lERROR &8| &fThe player was already unignored."
+    ignore-yourself: "&c&lERROR &8| &fYou can't ignore yourself."
+    anybody: "&c&lERROR &8| &fYou aren't ignore anybody."
+  socialspy:
+    activated: "&c&lERROR &8| &fYou already activated the socialspy."
+    unactivated: "&c&lERROR &8| &fYou already unactivated the socialspy."
+    arg-2-activated: "&c&lERROR &8| &c%arg-2% &fAlready activated the socialspy."
+    arg-2-unactivated: "&c&lERROR &8| &c%arg-2% &fAlready unactivated the socialspy."

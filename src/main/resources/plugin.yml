@@ -1,0 +1,8 @@
+main: code.BasicMsg
+name: BasicMsg
+version: 1.0.1
+author: zProgramm
+softdepend: [PlaceholderAPI]
+api-version: 1.13
+
+commands:

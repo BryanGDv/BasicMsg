@@ -1,0 +1,15 @@
+
+#
+# BasicMsg by zProgramm
+# Version: 1.0
+#
+
+
+config:
+
+  prefix: "&a[Bmsg] &8|"
+  variable: "%c"
+
+  perms:
+    reload: bmsg.reload
+    socialspy: bmsg.socialspy
