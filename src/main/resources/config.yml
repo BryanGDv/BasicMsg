@@ -8,8 +8,14 @@
 config:
 
   prefix: "&a[Bmsg] &8|"
-  variable: "%c"
+  p-variable: "%c"
+
+  error: "&c[Error] &8|"
+  e-variable: "%e"
 
   perms:
     reload: bmsg.reload
     socialspy: bmsg.socialspy
+    color: bmsg.color
+
+  update-check: false

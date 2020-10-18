@@ -14,8 +14,23 @@ public class PlayerMessage{
     public PlayerMessage(Manager manager){
         this.manager = manager;
     }
-    public void sendMessage(CommandSender sender, String path) {
 
+    public void sendMessage(CommandSender sender, String path, boolean color) {
+
+
+        String message;
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            message = PlaceholderAPI.setPlaceholders((Player) sender , path);
+
+        }else{
+            message = path;
+        }
+        sender.sendMessage(this.getMessage(message, color));
+    }
+
+
+    public void sendMessage(CommandSender sender, String path) {
 
         String message;
 
@@ -27,11 +42,19 @@ public class PlayerMessage{
         }
         sender.sendMessage(this.getMessage(message));
     }
+
     public String getMessage(String message) {
 
         message = manager.getVariables().replaceString(message);
         return ChatColor.translateAlternateColorCodes('&', message);
-
     }
+    public String getMessage(String message, Boolean color) {
 
+        message = manager.getVariables().replaceString(message);
+        if (color) {
+            return ChatColor.translateAlternateColorCodes('&', message);
+        }else{
+            return message;
+        }
+    }
 }

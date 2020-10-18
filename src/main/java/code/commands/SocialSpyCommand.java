@@ -25,7 +25,7 @@ public class SocialSpyCommand implements CommandClass {
 
     }
 
-    @Command(names = "socialspy")
+    @Command(names = {"socialspy", "spy"})
     public boolean onCommand(CommandSender sender, @OptArg String args, @OptArg OfflinePlayer target) {
 
         SocialSpyMethod socialspy = manager.getPlayerMethods().getSocialSpyMethod();

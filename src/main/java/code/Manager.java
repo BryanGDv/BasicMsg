@@ -28,7 +28,6 @@ public class Manager {
 
         this.debug = new ErrorManager(plugin);
         debug.log("Loading plugin..");
-
         this.cache = new CacheManager(this);
 
         this.configManager = new ConfigManager(plugin, debug);

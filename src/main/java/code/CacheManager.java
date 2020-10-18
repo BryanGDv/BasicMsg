@@ -17,7 +17,6 @@ public class CacheManager{
 
     public CacheManager(Manager manager){
         this.manager = manager;
-
         ErrorManager debug = manager.getLogs();
         debug.log("IgnoreCache loaded");
         debug.log("ReplyCache loaded!");

@@ -1,6 +1,5 @@
 package code.modules;
 
-
 import code.Manager;
 
 public class MethodManager{
@@ -23,6 +22,7 @@ public class MethodManager{
         manager.getLogs().log("Method registered");
 
     }
+
 
     public SocialSpyMethod getSocialSpyMethod(){
         return socialSpyMethod;

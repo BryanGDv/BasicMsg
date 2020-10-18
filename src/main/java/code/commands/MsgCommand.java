@@ -3,11 +3,13 @@ package code.commands;
 import code.CacheManager;
 import code.registry.ConfigManager;
 import code.modules.PlayerMessage;
+import code.modules.Color;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.Text;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -30,12 +32,11 @@ public class MsgCommand implements CommandClass{
         this.cache = cache;
     }
 
-    @Command(names = "msg")
+    @Command(names = {"msg", "pm"})
     public boolean onCommand(CommandSender sender, @OptArg OfflinePlayer target, @OptArg @Text String message) {
 
         ConfigManager files = manager.getFiles();
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-
 
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
@@ -64,19 +65,32 @@ public class MsgCommand implements CommandClass{
         }
 
         if (message.trim().isEmpty()) {
-            playersender.sendMessage(sender, messages.getString( "error.no-arg"));
+            playersender.sendMessage(sender, messages.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/msg [player] [message]");
             return true;
         }
-        playersender.sendMessage(player, command.getString("commands.msg-reply.player")
-                .replace("%player%", sender.getName())
-                .replace("%arg-1%", target.getName())
-                .replace("%message%", message));
 
-        playersender.sendMessage(target.getPlayer(), command.getString("commands.msg-reply.arg-1")
+
+        if (sender.hasPermission(config.getString("config.perms.color"))){
+           message = Color.color(message);
+        }
+
+        String playerFormat = Color.color(command.getString("commands.msg-reply.player"));
+        String targetFormat = Color.color(command.getString("commands.msg-reply.arg-1"));
+
+        playersender.sendMessage(player, playerFormat
+
                 .replace("%player%", sender.getName())
                 .replace("%arg-1%", target.getName())
-                .replace("%message%", message));
+
+                .replace("%message%", message), false);
+
+        playersender.sendMessage(target.getPlayer(), targetFormat
+
+                .replace("%player%", sender.getName())
+                .replace("%arg-1%", target.getName())
+
+                .replace("%message%", message), false);
 
         for (Player watcher : Bukkit.getServer().getOnlinePlayers()) {
             if (cache.getSocialSpy().contains(watcher.getUniqueId())) {

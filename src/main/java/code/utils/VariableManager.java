@@ -3,9 +3,8 @@ package code.utils;
 import code.Manager;
 import code.modules.PlayerMessage;
 import code.registry.ConfigManager;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.MemorySection;
+
 
 public class VariableManager {
 
@@ -25,6 +24,8 @@ public class VariableManager {
     }
 
     public String replaceString(String string){
-        return string.replace(config.getConfig().getString("config.variable"), config.getConfig().getString("config.prefix"));
+        return string
+                .replace(config.getConfig().getString("config.p-variable"), config.getConfig().getString("config.prefix"))
+                .replace(config.getConfig().getString("config.e-variable"), config.getConfig().getString("config.error"));
     }
 }

@@ -3,6 +3,7 @@ package code.registry;
 import code.BasicMsg;
 import code.debug.ErrorManager;
 import code.events.ChatListener;
+import code.events.JoinListener;
 import code.events.QuitListener;
 import code.Manager;
 import org.bukkit.Bukkit;
@@ -28,6 +29,8 @@ public class EventManager {
         debug.log("QuitListener loaded!");
         pl.registerEvents(new ChatListener(manager.getFiles()), plugin);
         debug.log("ChatListener loaded!");
+        pl.registerEvents(new JoinListener(manager), plugin);
+        debug.log("JoinListener loaded!");
 
         plugin.getLogger().info("Events loaded!");
     }

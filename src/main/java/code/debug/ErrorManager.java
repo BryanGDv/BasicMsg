@@ -21,7 +21,6 @@ public class ErrorManager {
 
         switch (number) {
             case 0:
-                Bukkit.getLogger().info("A error ocurred. Please check debug");
                 this.getLogger(string, "WARNING");
                 break;
 
@@ -47,7 +46,7 @@ public class ErrorManager {
         }
         try{
             file.createNewFile();
-            Bukkit.getLogger().info(plugin.getName() + "File created!");
+            plugin.getLogger().info( "Logs created!");
 
         }catch(IOException ioException){
             ioException.printStackTrace();

@@ -23,6 +23,8 @@ commands:
   ignore:
     player-ignored: "%c &fNow you can't watch messages from &c%player%&f."
     player-unignored: "%c &fNow you can watch messages from &c%player%&f."
+    list-ignoredplayers: "&fList of ignored players:"
+    space: "&8->"
 
   socialspy:
     player:

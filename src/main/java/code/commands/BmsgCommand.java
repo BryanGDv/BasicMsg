@@ -23,7 +23,7 @@ public class BmsgCommand implements CommandClass {
         this.manager = manager;
     }
 
-    @Command(names = "bmsg")
+    @Command(names = {"bmsg", "bm"})
     public boolean help(CommandSender sender, @OptArg String args) {
 
         ConfigManager files = manager.getFiles();

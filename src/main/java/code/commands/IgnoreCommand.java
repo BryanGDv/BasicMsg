@@ -44,7 +44,7 @@ public class IgnoreCommand implements CommandClass{
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             System.out.println(playersender.getMessage(messages.getString("error.console")));
             return true;
         }
@@ -52,13 +52,13 @@ public class IgnoreCommand implements CommandClass{
         Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
-        if (target == null){
+        if (target == null) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/ignore [player]");
             return true;
         }
 
-        if (!(target.isOnline())){
+        if (!(target.isOnline()) && (!(target.getName().equals("-list")))) {
             playersender.sendMessage(sender, messages.getString("error.player-offline"));
             return true;
         }
@@ -68,27 +68,47 @@ public class IgnoreCommand implements CommandClass{
             return true;
         }
 
-        String targetname = target.getPlayer().getName();
-
         Map<UUID, List<String>> ignorelist = cache.getIgnorelist();
-        if (ignorelist.containsKey(playeruuid)){
+        List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
 
-            List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
-
-            if (!(ignoredlist.contains(targetname))){
-                ignore.add(sender, target.getPlayer());
-                playersender.sendMessage(sender, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
-            }else{
-                ignore.remove(sender, target.getPlayer());
-                playersender.sendMessage(sender, command.getString("commands.ignore.player-unignored").replace("%player%", targetname));
+        if (target.getName().equalsIgnoreCase("-list")) {
+            playersender.sendMessage(player, command.getString("commands.ignore.space"));
+            if (ignorelist.containsKey(playeruuid)) {
+                if (ignoredlist == null){
+                    playersender.sendMessage(player, messages.getString("error.ignore.anybody"));
+                } else {
+                    playersender.sendMessage(player, command.getString("commands.ignore.list-ignoredplayers"));
+                    for (String playersignored : ignoredlist) {
+                        playersender.sendMessage(player, "&8- &a" + playersignored);
+                    }
+                }
+            } else {
+                playersender.sendMessage(player, messages.getString("error.ignore.anybody"));
 
             }
+            playersender.sendMessage(player, command.getString("commands.ignore.space"));
             return true;
-        } else {
+        }
+
+            String targetname = target.getPlayer().getName();
+
+        if (ignorelist.containsKey(playeruuid)) {
+
+            if (!(ignoredlist.contains(targetname))) {
+                ignore.add(sender, target.getPlayer());
+                playersender.sendMessage(sender, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
+            } else {
+                ignore.remove(sender, target.getPlayer());
+                playersender.sendMessage(sender, command.getString("commands.ignore.player-unignored").replace("%player%", targetname));
+            }
+            return true;
+        }else{
             ignore.add(sender, target.getPlayer());
             playersender.sendMessage(sender, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
+
         }
         return true;
+        }
 
-    }
+
 }

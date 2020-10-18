@@ -1,5 +1,7 @@
 package code;
 
+import code.utils.UpdateCheck;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -10,10 +12,10 @@ public class BasicMsg extends JavaPlugin {
 
     private Manager basicMsg;
 
-
+    @Override
     public void onEnable() {
 
-        registerManager();
+        registerManaging();
         registerPlaceholders();
 
         getLogger().info("Plugin created by zProgram.");
@@ -25,10 +27,36 @@ public class BasicMsg extends JavaPlugin {
         getLogger().info("Thx for using this plugin <3.");
         getDisableMessage();
     }
-    public void registerManager() {
+    public void registerManaging() {
 
+        Metrics metrics = new Metrics(this, 9139);
         basicMsg = new Manager(this);
 
+        if (basicMsg.getFiles().getConfig().getBoolean("config.update-check")){
+            getUpdateChecker();
+        }
+
+    }
+    public void getUpdateChecker(){
+        getLogger().info("Checking updating checker..");
+        UpdateCheck
+                .of(this)
+                .resourceId(84926)
+                .handleResponse((versionResponse, version) -> {
+                    switch (versionResponse) {
+                        case FOUND_NEW:
+                            getLogger().info( "A new version of the plugin was found: " + version);
+                            basicMsg.getLogs().log("A new version of the plugin was found: " + version);
+                            break;
+                        case LATEST:
+                            getLogger().info( "You are on the latest version of the plugin.");
+                            basicMsg.getLogs().log("You are on the latest version of the plugin.");
+                            break;
+                        case UNAVAILABLE:
+                            getLogger().info("Unable to perform an update check.");
+                            basicMsg.getLogs().log("A new version of the plugin was found: " + version);
+                    }
+                }).check();
     }
     public void registerPlaceholders(){
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

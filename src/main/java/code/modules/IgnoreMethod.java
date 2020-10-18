@@ -64,7 +64,6 @@ public class IgnoreMethod {
         UUID uuid = you.getUniqueId();
 
         List<String> ignoredPlayers = ignorelist.get(uuid);
-
         ignoredPlayers.remove(player.getName());
         players.set("players." + uuid + ".players-ignored", ignoredPlayers);
         players.save();
