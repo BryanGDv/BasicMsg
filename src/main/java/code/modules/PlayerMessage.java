@@ -15,46 +15,48 @@ public class PlayerMessage{
         this.manager = manager;
     }
 
-    public void sendMessage(CommandSender sender, String path, boolean color) {
+    public void sendMessage(CommandSender sender, String path, Boolean color, String message) {
 
-
-        String message;
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            message = PlaceholderAPI.setPlaceholders((Player) sender , path);
-
-        }else{
-            message = path;
+            if (PlaceholderAPI.containsPlaceholders(path)) {
+                path = getPlaceholders(sender, path);
+            }
         }
-        sender.sendMessage(this.getMessage(message, color));
+
+        sender.sendMessage(getMessage(path, color).replace("%message%", message));
     }
 
 
     public void sendMessage(CommandSender sender, String path) {
 
-        String message;
-
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            message = PlaceholderAPI.setPlaceholders((Player) sender , path);
-
-        }else{
-            message = path;
+            path = getPlaceholders(sender, path);
         }
-        sender.sendMessage(this.getMessage(message));
+
+        sender.sendMessage(getMessage(path));
     }
 
     public String getMessage(String message) {
 
         message = manager.getVariables().replaceString(message);
+        
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+
     public String getMessage(String message, Boolean color) {
 
         message = manager.getVariables().replaceString(message);
+
         if (color) {
             return ChatColor.translateAlternateColorCodes('&', message);
-        }else{
-            return message;
         }
+
+        return message;
+    }
+    private String getPlaceholders(CommandSender sender, String path){
+
+        Player player = (Player) sender;
+        return PlaceholderAPI.setPlaceholders(player, path);
     }
 }

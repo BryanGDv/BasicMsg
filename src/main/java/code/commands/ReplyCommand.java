@@ -59,7 +59,13 @@ public class ReplyCommand implements CommandClass {
 
             OfflinePlayer target = Bukkit.getPlayer(reply.get(player.getUniqueId()));
 
+            if (message.equalsIgnoreCase("-player")){
+                playersender.sendMessage(player, command.getString("commands.msg-reply.talked")
+                .replace("%player%", target.getName()));
+            }
+
             CommandSender targetsender = target.getPlayer();
+
 
             String msg;
 
@@ -72,12 +78,12 @@ public class ReplyCommand implements CommandClass {
             playersender.sendMessage(player, Color.color(command.getString ("commands.msg-reply.player")
                     .replace("%player%", sender.getName())
                     .replace("%arg-1%", target.getName()))
-                    .replace("%message%", msg), false);
+                    , false, message);
 
             playersender.sendMessage(targetsender, Color.color(command.getString ("commands.msg-reply.player")
                     .replace("%player%", sender.getName())
                     .replace("%arg-1%", target.getName()))
-                    .replace("%message%", msg), false);
+                    , false, message);
 
             reply.replace(reply.get(player.getUniqueId()), player.getUniqueId());
 

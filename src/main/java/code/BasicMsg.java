@@ -29,9 +29,11 @@ public class BasicMsg extends JavaPlugin {
     }
     public void registerManaging() {
 
-        Metrics metrics = new Metrics(this, 9139);
         basicMsg = new Manager(this);
 
+        if (basicMsg.getFiles().getConfig().getBoolean("config.metrics")) {
+            Metrics metrics = new Metrics(this, 9139);
+        }
         if (basicMsg.getFiles().getConfig().getBoolean("config.update-check")){
             getUpdateChecker();
         }

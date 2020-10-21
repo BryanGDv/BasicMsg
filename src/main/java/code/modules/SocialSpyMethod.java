@@ -23,6 +23,7 @@ public class SocialSpyMethod {
     public String getStatus(){
         return status;
     }
+
     public void toggle(UUID uuid){
 
         if (socialspy.contains(uuid)) {

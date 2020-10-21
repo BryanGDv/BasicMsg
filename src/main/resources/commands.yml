@@ -10,6 +10,16 @@ commands:
   msg-reply:
     player: "%c &fYou &8> &f%arg-1% &8: &f%message%"
     arg-1: "%c &f%player% &8> &fYou &8: &f%message%"
+    talked: "%c &fYou talked with &a%player%"
+
+  # When you use /msg -toggle
+  msg-toggle:
+    player:
+      on: "%c &fNow everyone can messaging you."
+      off: "%c &fNow nobody can messaing you."
+    arg-1:
+      on: "%c &fNow everyone can messaging &a%arg-1%&f."
+      off: "%c &fNow nobody can messaging &a%arg-1%&f."
 
   bmsg:
     help:
@@ -32,6 +42,7 @@ commands:
       disabled: "%c &fSocialspy disabled"
       toggle: "%c &fSocialspy %mode%"
 
+      # Optional (Only if you use %mode%)
       variable-on: "activated"
       variable-off: "disabled"
 

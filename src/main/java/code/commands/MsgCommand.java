@@ -1,6 +1,7 @@
 package code.commands;
 
 import code.CacheManager;
+import code.modules.MsgToggleMethod;
 import code.registry.ConfigManager;
 import code.modules.PlayerMessage;
 import code.modules.Color;
@@ -18,6 +19,7 @@ import code.utils.Configuration;
 import code.Manager;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class MsgCommand implements CommandClass{
@@ -32,11 +34,12 @@ public class MsgCommand implements CommandClass{
         this.cache = cache;
     }
 
-    @Command(names = {"msg", "pm"})
+    @Command(names = {"msg", "pm", "tell", "t"})
     public boolean onCommand(CommandSender sender, @OptArg OfflinePlayer target, @OptArg @Text String message) {
 
         ConfigManager files = manager.getFiles();
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
+        MsgToggleMethod msgToggleMethod = manager.getPlayerMethods().getMsgToggleMethod();
 
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
@@ -52,7 +55,8 @@ public class MsgCommand implements CommandClass{
             return true;
         }
         Player player = (Player) sender;
-        if (!(target.isOnline())) {
+
+        if (!(target.isOnline()) && (!(target.getName().equalsIgnoreCase("-toggle")))){
             playersender.sendMessage(sender, messages.getString("error.player-offline"));
             return true;
         }
@@ -64,6 +68,43 @@ public class MsgCommand implements CommandClass{
 
         }
 
+        if (target.getName().equalsIgnoreCase("-toggle")){
+            Set<UUID> msgtoggle = cache.getMsgToggle();
+            if (message.trim().isEmpty()){
+
+                if (!(msgtoggle.contains(player.getUniqueId()))){
+                    msgToggleMethod.on(player.getUniqueId());
+                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.on"));
+                }else{
+                    msgToggleMethod.off(player.getUniqueId());
+                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.off"));
+                }
+
+            } else {
+
+                OfflinePlayer you = Bukkit.getPlayer(message);
+                CommandSender yousender =  you.getPlayer();
+
+                if (!(you.isOnline())){
+                    playersender.sendMessage(sender, messages.getString("error.player-offline"));
+                    return true;
+                }
+
+                if (!(msgtoggle.contains(you.getUniqueId()))){
+                    msgToggleMethod.on(you.getUniqueId());
+                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player..on")
+                            .replace("%arg-1%", yousender.getName()));
+                    playersender.sendMessage(yousender, command.getString("commands.msg-toggle.arg-1.on"));
+                }else{
+                    msgToggleMethod.off(you.getUniqueId());
+                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.off")
+                            .replace("%arg-1", you.getPlayer().getName()));
+                    playersender.sendMessage(yousender, command.getString("commands.msg-toggle.arg-1.off"));
+                }
+                return true;
+            }
+            return true;
+        }
         if (message.trim().isEmpty()) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/msg [player] [message]");
@@ -82,15 +123,13 @@ public class MsgCommand implements CommandClass{
 
                 .replace("%player%", sender.getName())
                 .replace("%arg-1%", target.getName())
-
-                .replace("%message%", message), false);
+                , true,  message);
 
         playersender.sendMessage(target.getPlayer(), targetFormat
 
                 .replace("%player%", sender.getName())
                 .replace("%arg-1%", target.getName())
-
-                .replace("%message%", message), false);
+                , true, message);
 
         for (Player watcher : Bukkit.getServer().getOnlinePlayers()) {
             if (cache.getSocialSpy().contains(watcher.getUniqueId())) {
