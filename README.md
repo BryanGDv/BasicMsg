@@ -26,16 +26,16 @@ Requeriments:
 # 2. Commands:
 
 - /msg [player] [message]: To send a message to other player.
-_-toggle [player]: To toggle your PM.
+_-toggle [player]: To toggle your PM._
 
 - /reply [message]: To reply a player.
-_-player: To see who talked with you.
+_-player: To see who talked with you._
 
-- /ignore [player] [message]: To ignore a player
-_-list: To see who you ignored.
+- /ignore [player] [message]: To ignore a player-
+_-list: To see who you ignored._
 
 - /socialspy [on] [player]: To toggle the spymode
-_-list: To see who you use spy mode.
+_-list: To see who you use spy mode._
 
 - /bmsg [args]: The center command,
 
