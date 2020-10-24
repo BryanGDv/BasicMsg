@@ -1,5 +1,6 @@
-# BasicMsg [1.0]
+# BasicMsg [1.1]
 - Created in 17/10/20
+
 
 # Introduction:
 
@@ -19,19 +20,22 @@ Messages:
 - You can ignore other players, and see the list.
 - You can use the socialspy and see who uses it.
 
+Requeriments:
+- Compatible with PlaceholderAPI.
+
 # 2. Commands:
 
 - /msg [player] [message]: To send a message to other player.
-* -toggle [player]: To toggle your PM.
+-toggle [player]: To toggle your PM.
 
 - /reply [message]: To reply a player.
-* -player: To see who talked with you.
+-player: To see who talked with you.
 
 - /ignore [player] [message]: To ignore a player-
-* -list: To see who you ignored.
+-list: To see who you ignored.
 
 - /socialspy [on] [player]: To toggle the spymode
-* -list: To see who you use spy mode.
+-list: To see who you use spy mode.
 
 - /bmsg [args]: The center command,
 
