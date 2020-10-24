@@ -2,7 +2,7 @@
 - Created in 17/10/20
 
 
-# Introduction:
+## Introduction:
 
 - This add-on is about messaging, with advanced options and customizable messages. The index of the plugin is:
 
@@ -11,7 +11,7 @@
 3. Permissions
 4. Sounds
 
-# 1. Options:
+## 1. Options:
 
 Messages:
 
@@ -23,23 +23,23 @@ Messages:
 Requeriments:
 - Compatible with PlaceholderAPI.
 
-# 2. Commands:
+## 2. Commands:
 
 - /msg [player] [message]: To send a message to other player.
-_-toggle [player]: To toggle your PM._
+> -toggle [player]: To toggle your PM.
 
 - /reply [message]: To reply a player.
-_-player: To see who talked with you._
+> -player: To see who talked with you.
 
 - /ignore [player] [message]: To ignore a player-
-_-list: To see who you ignored._
+> -list: To see who you ignored.
 
 - /socialspy [on] [player]: To toggle the spymode
-_-list: To see who you use spy mode._
+> -list: To see who you use spy mode.
 
 - /bmsg [args]: The center command,
 
-# 3. Perms:
+## 3. Perms:
 
 Note: You can modify the perms in the config.yml.
 - bmsg.color: To send a private message with colors.
@@ -47,7 +47,7 @@ Note: You can modify the perms in the config.yml.
 - bmsg.socialspy: To toggle the socialspy.
 - bmsg.mtoggle.admin: To toggle your private messages.
 
-# 4. Sounds:
+## 4. Sounds:
 - In maintenance.
 
 Thanks for downloading the plugin <3.
