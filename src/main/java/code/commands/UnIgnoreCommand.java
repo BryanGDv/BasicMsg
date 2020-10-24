@@ -5,6 +5,7 @@ import code.CacheManager;
 import code.Manager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
+import code.sounds.SoundManager;
 import code.utils.Configuration;
 import code.modules.PlayerMessage;
 
@@ -22,12 +23,10 @@ import java.util.UUID;
 public class UnIgnoreCommand implements CommandClass{
 
 
-    private final BasicMsg plugin;
     private final Manager manager;
     private final CacheManager cache;
 
-    public UnIgnoreCommand(BasicMsg plugin, Manager manager, CacheManager cache){
-        this.plugin = plugin;
+    public UnIgnoreCommand(Manager manager, CacheManager cache){
         this.manager = manager;
         this.cache = cache;
 
@@ -39,6 +38,7 @@ public class UnIgnoreCommand implements CommandClass{
         IgnoreMethod ignore = manager.getPlayerMethods().getIgnoreMethod();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
+        SoundManager sound = manager.getSounds();
 
         Configuration players = files.getPlayers();
         Configuration command = files.getCommand();
@@ -53,14 +53,17 @@ public class UnIgnoreCommand implements CommandClass{
 
         if (target == null){
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
+            sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
         if (!(target.isOnline())){
             playersender.sendMessage(sender, messages.getString("error.player-offline"));
+            sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
         if (target.getName().equalsIgnoreCase(sender.getName())){
             playersender.sendMessage(sender, messages.getString("error.ignore.ignore-yourself"));
+            sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
 
@@ -71,18 +74,21 @@ public class UnIgnoreCommand implements CommandClass{
 
         if (!(ignorelist.containsKey(playeruuid))){
             playersender.sendMessage(sender, messages.getString("error.ignore.anybody"));
+            sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
 
         List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
+        UUID targetuuid = target.getPlayer().getUniqueId();
 
         if (!(ignoredlist.contains(targetname))){
             playersender.sendMessage(sender, messages.getString ("error.ignore.already-unignored"));
+            sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
-            ignore.remove(sender, target.getPlayer());
+            ignore.unset(sender, targetuuid);
             playersender.sendMessage(sender, command.getString("commands.ignore.player-unignored").replace("%player%", targetname));
-
+            sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-unignore");
         return true;
     }
 }

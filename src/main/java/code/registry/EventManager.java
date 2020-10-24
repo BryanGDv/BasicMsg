@@ -25,7 +25,7 @@ public class EventManager {
 
         PluginManager pl = Bukkit.getServer().getPluginManager();
 
-        pl.registerEvents(new QuitListener(manager.getCache()), plugin);
+        pl.registerEvents(new QuitListener(manager), plugin);
         debug.log("QuitListener loaded!");
         pl.registerEvents(new ChatListener(manager.getFiles()), plugin);
         debug.log("ChatListener loaded!");

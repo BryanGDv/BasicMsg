@@ -1,0 +1,72 @@
+sounds:
+  enabled-all: true
+  vol: 1
+
+  error:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-message:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-recieve-msg:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-reply:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-ignore:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-unignore:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-socialspy:
+    enabled-all: true
+
+    enable:
+      enabled: true
+      sound: LEVEL_UP
+      pitch: 1
+
+    disable:
+      enabled: true
+      sound: LEVEL_UP
+      pitch: 1
+
+    toggle:
+      enabled: true
+      sound: LEVEL_UP
+      pitch: 1
+
+    receive-msg:
+      enabled: true
+      sound: LEVEL_UP
+      pitch: 1
+
+  on-togglepm:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-list:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
+  on-reply-player:
+    enabled: true
+    sound:
+    pitch: 1
+

@@ -39,12 +39,12 @@ public class CommandRegistry implements LoaderService{
 
         commandManager.getTranslator().setProvider(new CustomI18n(manager));
 
-        registerCommands(new BmsgCommand(plugin, manager));
-        registerCommands(new IgnoreCommand(plugin, manager, manager.getCache()));
-        registerCommands(new MsgCommand(plugin, manager, manager.getCache()));
-        registerCommands(new ReplyCommand(plugin, manager, manager.getCache()));
-        registerCommands(new SocialSpyCommand(plugin, manager));
-        registerCommands(new UnIgnoreCommand(plugin, manager, manager.getCache()));
+        registerCommands(new BmsgCommand(plugin , manager));
+        registerCommands(new IgnoreCommand(manager, manager.getCache()));
+        registerCommands(new MsgCommand(manager, manager.getCache()));
+        registerCommands(new ReplyCommand(manager, manager.getCache()));
+        registerCommands(new SocialSpyCommand(manager));
+        registerCommands(new UnIgnoreCommand(manager, manager.getCache()));
 
         manager.getLogs().log("Commands loaded!");
         plugin.getLogger().info("Commands loaded!");

@@ -5,6 +5,7 @@ import code.modules.MethodManager;
 import code.registry.CommandRegistry;
 import code.registry.ConfigManager;
 import code.registry.EventManager;
+import code.sounds.SoundManager;
 import code.utils.VariableManager;
 
 
@@ -20,6 +21,8 @@ public class Manager {
     private final EventManager eventManager;
     private final ConfigManager configManager;
 
+    private final SoundManager soundManager;
+
     private final CacheManager cache;
 
 
@@ -32,6 +35,9 @@ public class Manager {
 
         this.configManager = new ConfigManager(plugin, debug);
         configManager.setup();
+
+        this.soundManager = new SoundManager(this);
+        soundManager.setup();
 
         this.variables = new VariableManager(configManager, this);
 
@@ -65,6 +71,13 @@ public class Manager {
 
     public ConfigManager getFiles(){
         return configManager;
+    }
+
+    public SoundManager getSounds(){
+        return soundManager;
+    }
+    public BasicMsg getPlugin(){
+        return plugin;
     }
 
 }

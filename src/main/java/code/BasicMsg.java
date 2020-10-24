@@ -1,8 +1,10 @@
 package code;
 
+import code.modules.Color;
 import code.utils.UpdateCheck;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -20,6 +22,8 @@ public class BasicMsg extends JavaPlugin {
 
         getLogger().info("Plugin created by zProgram.");
         getLogger().info("You are using version " + getDescription().getVersion() + ".");
+        getLogger().info("If you want support, you can join in: https://discord.gg/wQThjXs");
+
         basicMsg.getLogs().log("- Plugin successfull loaded.", 2);
 
     }

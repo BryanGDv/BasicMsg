@@ -6,7 +6,7 @@ import code.CacheManager;
 import java.util.Set;
 import java.util.UUID;
 
-public class SocialSpyMethod {
+public class SocialSpyMethod implements MethodService{
 
     private final Manager manager;
     private final CacheManager cache;

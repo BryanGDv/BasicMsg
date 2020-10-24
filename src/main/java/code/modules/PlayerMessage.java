@@ -17,7 +17,6 @@ public class PlayerMessage{
 
     public void sendMessage(CommandSender sender, String path, Boolean color, String message) {
 
-
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             if (PlaceholderAPI.containsPlaceholders(path)) {
                 path = getPlaceholders(sender, path);

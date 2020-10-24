@@ -5,7 +5,7 @@ import code.Manager;
 import java.util.Set;
 import java.util.UUID;
 
-public class MsgToggleMethod {
+public class MsgToggleMethod implements MethodService{
 
     private final Manager manager;
     private final CacheManager cache;
@@ -19,12 +19,12 @@ public class MsgToggleMethod {
 
     }
 
-    public void on(UUID uuid) {
+    public void set(UUID uuid) {
         msgtoggle.add(uuid);
     }
 
 
-    public void off(UUID uuid){
+    public void unset(UUID uuid){
         msgtoggle.remove(uuid);
 
     }

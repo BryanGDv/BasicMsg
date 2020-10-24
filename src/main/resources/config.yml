@@ -1,7 +1,7 @@
 
 #
 # BasicMsg by zProgramm
-# Version: 1.0
+# Version: 1.1
 #
 
 
@@ -14,9 +14,12 @@ config:
   e-variable: "%e"
 
   perms:
+    color: bmsg.color
     reload: bmsg.reload
     socialspy: bmsg.socialspy
-    color: bmsg.color
+    toggle-admin: bmsg.mtoggle.admin
 
   metrics: true
   update-check: false
+  # If you allow the subcommand to go to the support of the plugin /bmsg support.
+  allow-support: false

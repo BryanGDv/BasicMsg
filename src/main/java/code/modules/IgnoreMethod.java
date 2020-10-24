@@ -3,6 +3,8 @@ package code.modules;
 import code.Manager;
 import code.CacheManager;
 import code.utils.Configuration;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class IgnoreMethod {
+public class IgnoreMethod{
 
     private final Configuration players;
     private final Configuration messages;
@@ -35,42 +37,46 @@ public class IgnoreMethod {
     }
 
 
-    public void add(CommandSender sender, Player player) {
+    public void set(CommandSender sender, UUID uuid) {
 
         Player you = (Player) sender;
-        UUID uuid = you.getUniqueId();
+        UUID playeruuid = you.getUniqueId();
 
+        OfflinePlayer player = Bukkit.getPlayer(uuid);
 
         List<String> ignoredPlayers;
 
-        if (ignorelist.get(uuid) == null) {
+        if (ignorelist.get(playeruuid) == null) {
             ignoredPlayers = new ArrayList<>();
         } else {
-            ignoredPlayers = ignorelist.get(uuid);
+            ignoredPlayers = ignorelist.get(playeruuid);
         }
 
         ignoredPlayers.add(player.getName());
-        ignorelist.put(uuid, ignoredPlayers);
-        players.set("players." + uuid + ".players-ignored", ignoredPlayers);
+        ignorelist.put(playeruuid, ignoredPlayers);
+        players.set("players." + playeruuid + ".players-ignored", ignoredPlayers);
 
         players.save();
 
 
     }
 
-    public void remove(CommandSender sender, Player player){
+    public void unset(CommandSender sender, UUID uuid){
 
         Player you = (Player) sender;
-        UUID uuid = you.getUniqueId();
+        UUID playeruuid = you.getUniqueId();
 
-        List<String> ignoredPlayers = ignorelist.get(uuid);
-        ignoredPlayers.remove(player.getName());
-        players.set("players." + uuid + ".players-ignored", ignoredPlayers);
+        OfflinePlayer target = Bukkit.getPlayer(uuid);
+
+        List<String> ignoredPlayers = ignorelist.get(playeruuid);
+        ignoredPlayers.remove(target.getName());
+        players.set("players." + playeruuid + ".players-ignored", ignoredPlayers);
         players.save();
 
-        if (players.getStringList("players." + uuid + ".players-ignored").isEmpty()){
+        if (players.getStringList("players." + playeruuid + ".players-ignored").isEmpty()){
             players.set("players." + uuid, null);
             players.save();
+
         }
 
     }

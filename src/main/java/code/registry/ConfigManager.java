@@ -12,6 +12,7 @@ public class ConfigManager {
     private Configuration command;
     private Configuration players;
     private Configuration messages;
+    private Configuration sounds;
 
     private final ErrorManager debug;
     private final BasicMsg plugin;
@@ -30,6 +31,8 @@ public class ConfigManager {
         debug.log("players.yml loaded!");
         messages = new Configuration(plugin, "messages.yml");
         debug.log("messages.yml loaded!");
+        messages = new Configuration(plugin, "sounds.yml");
+        debug.log("sounds.yml loaded!");
 
         plugin.getLogger().info("Config loaded!");
     }
@@ -48,6 +51,10 @@ public class ConfigManager {
 
     public Configuration getMessages(){
         return messages;
+    }
+
+    public Configuration getSounds(){
+        return sounds;
     }
 }
 

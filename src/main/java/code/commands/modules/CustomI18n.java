@@ -9,11 +9,9 @@ import java.util.Map;
 
 public class CustomI18n implements TranslationProvider {
 
-    private final Manager manager;
     protected Map<String, String> translations;
 
     public CustomI18n(Manager manager){
-        this.manager = manager;
         translations = new HashMap<>();
         translations.put("command.subcommand.invalid", "1. The subcommand %s doesn't exists!");
         translations.put("command.no-permission", "2. No permission.");

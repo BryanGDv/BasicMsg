@@ -15,11 +15,13 @@ commands:
   # When you use /msg -toggle
   msg-toggle:
     player:
-      on: "%c &fNow everyone can messaging you."
-      off: "%c &fNow nobody can messaing you."
+      activated: "%c &fNow nobody can't messaging you."
+      unactivated: "%c &fNow everyone can messaing you."
     arg-1:
-      on: "%c &fNow everyone can messaging &a%arg-1%&f."
-      off: "%c &fNow nobody can messaging &a%arg-1%&f."
+      activated: "%c &fNow nobody can messaging &a%arg-1%&f."
+      unactivated: "%c &fNow everyone can messaging &a%arg-1%&f."
+    msg: "%c &fSrry, &a%player% &fhas the pm disabled."
+    left: "%c &fDear %player%, &fthe player &a(%arg-1%) &fthat you talked or talked with you, left the game."
 
   bmsg:
     help:
@@ -33,6 +35,7 @@ commands:
   ignore:
     player-ignored: "%c &fNow you can't watch messages from &c%player%&f."
     player-unignored: "%c &fNow you can watch messages from &c%player%&f."
+
     list-ignoredplayers: "&fList of ignored players:"
     space: "&8->"
 
@@ -50,3 +53,6 @@ commands:
       enabled: "%c &fSocialspy activated from &c%arg-2%"
       disabled: "%c &fSocialspy disabled from &c%arg-2%"
     spy: "&a[SocialSpy] &8| &f%player% &8> &f%arg-1% &8: &f%message%"
+
+    list-spyplayers: "&fList of players using socialspy."
+    space: "&8->"
