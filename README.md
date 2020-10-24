@@ -25,19 +25,19 @@ Requeriments:
 
 # 2. Commands:
 
-- /msg [player] [message]: To send a message to other player.
+- /msg [player] [message]: To send a message to other player.-
 -toggle [player]: To toggle your PM.
 
-- /reply [message]: To reply a player.
+- /reply [message]: To reply a player.-
 -player: To see who talked with you.
 
 - /ignore [player] [message]: To ignore a player-
 -list: To see who you ignored.
 
-- /socialspy [on] [player]: To toggle the spymode
+- /socialspy [on] [player]: To toggle the spymode-
 -list: To see who you use spy mode.
 
-- /bmsg [args]: The center command,
+- /bmsg [args]: The center command-
 
 # 3. Perms:
 
