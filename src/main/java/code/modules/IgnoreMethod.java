@@ -76,7 +76,6 @@ public class IgnoreMethod{
         if (players.getStringList("players." + playeruuid + ".players-ignored").isEmpty()){
             players.set("players." + uuid, null);
             players.save();
-
         }
 
     }

@@ -21,6 +21,8 @@ public class Manager {
     private final EventManager eventManager;
     private final ConfigManager configManager;
 
+    public String test;
+
     private final SoundManager soundManager;
 
     private final CacheManager cache;
@@ -49,7 +51,6 @@ public class Manager {
 
         this.eventManager = new EventManager(plugin, this);
         eventManager.setup();
-
 
     }
 
