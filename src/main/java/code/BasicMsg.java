@@ -40,24 +40,7 @@ public class BasicMsg extends JavaPlugin {
     }
     public void getUpdateChecker(){
         getLogger().info("Checking updating checker..");
-        UpdateCheck
-                .of(this)
-                .resourceId(84926)
-                .handleResponse((versionResponse, version) -> {
-                    switch (versionResponse) {
-                        case FOUND_NEW:
-                            getLogger().info( "A new version of the plugin was found: " + version);
-                            basicMsg.getLogs().log("A new version of the plugin was found: " + version);
-                            break;
-                        case LATEST:
-                            getLogger().info( "You are on the latest version of the plugin.");
-                            basicMsg.getLogs().log("You are on the latest version of the plugin.");
-                            break;
-                        case UNAVAILABLE:
-                            getLogger().info("Unable to perform an update check.");
-                            basicMsg.getLogs().log("A new version of the plugin was found: " + version);
-                    }
-                }).check();
+        UpdateCheck.init(this, 84926);
     }
     public void registerPlaceholders(){
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
