@@ -9,7 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BasicMsg extends JavaPlugin {
 
     private Manager basicMsg;
-    private BasicAPI api;
+
+    private static BasicAPI api;
 
     @Override
     public void onEnable() {
@@ -25,11 +26,8 @@ public class BasicMsg extends JavaPlugin {
         basicMsg.getLogs().log("- Plugin successfull loaded.", 2);
 
     }
-    public void getAPIS(){
-        Bukkit.getLogger().info("test");
-    }
 
-    public BasicAPI getAPI(){
+    public static BasicAPI getAPI(){
         return api;
     }
 
