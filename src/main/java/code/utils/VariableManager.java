@@ -1,7 +1,7 @@
 package code.utils;
 
 import code.Manager;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 import code.registry.ConfigManager;
 import org.bukkit.command.CommandSender;
 

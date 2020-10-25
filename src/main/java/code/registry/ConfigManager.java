@@ -31,7 +31,7 @@ public class ConfigManager {
         debug.log("players.yml loaded!");
         messages = new Configuration(plugin, "messages.yml");
         debug.log("messages.yml loaded!");
-        messages = new Configuration(plugin, "sounds.yml");
+        sounds = new Configuration(plugin, "sounds.yml");
         debug.log("sounds.yml loaded!");
 
         plugin.getLogger().info("Config loaded!");

@@ -1,5 +1,6 @@
 package code.sounds;
 
+import code.CacheManager;
 import code.Manager;
 import code.debug.ErrorManager;
 import code.utils.Configuration;
@@ -15,10 +16,13 @@ public class SoundManager{
 
     private final Manager manager;
     private final Configuration sound;
+
+    private final CacheManager cache;
     private final ErrorManager debug;
 
     public SoundManager(Manager manager){
         this.manager = manager;
+        this.cache = manager.getCache();
         this.sound = manager.getFiles().getSounds();
         this.debug = manager.getLogs();
     }
@@ -27,12 +31,10 @@ public class SoundManager{
 
         String version = Bukkit.getServer().getClass().getName();
 
-        String test3 = version.split("\\.")[3];
+        String versionname = version.split("\\.")[3];
 
-        Bukkit.getLogger().info("Normal: " + version);
-        Bukkit.getLogger().info("Version: " + test3);
 
-        switch (test3) {
+        switch (versionname) {
             case "v1_8_R3":
                 debug.log("Using 1.8, enabling sounds.");
                 break;
@@ -49,12 +51,15 @@ public class SoundManager{
     }
 
     public void setSound(UUID target, String path){
-
         OfflinePlayer player = Bukkit.getPlayer(target);
 
         Location location = player.getPlayer().getLocation();
 
         if (!(sound.getBoolean("sounds.enabled-all"))){
+            return;
+        }
+
+        if (!(cache.getPlayerSounds().contains(target))){
             return;
         }
 

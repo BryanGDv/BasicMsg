@@ -3,19 +3,15 @@ package code.commands;
 import code.modules.SocialSpyMethod;
 import code.registry.ConfigManager;
 import code.Manager;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import code.BasicMsg;
 import code.utils.Configuration;
-
-import java.util.List;
 
 
 public class SocialSpyCommand implements CommandClass{
@@ -97,7 +93,6 @@ public class SocialSpyCommand implements CommandClass{
                 }
                 socialspy.set(player.getUniqueId());
                 playersender.sendMessage(player.getPlayer(), command.getString("commands.socialspy.player.enabled"));
-                sound.setSound(player.getUniqueId(), "sounds.on-socialspy.enable");
             } else {
                 String targetname = target.getName();
                 if (!target.isOnline()) {
@@ -113,8 +108,8 @@ public class SocialSpyCommand implements CommandClass{
                 socialspy.set(target.getUniqueId());
                 playersender.sendMessage(player.getPlayer(), command.getString("commands.socialspy.arg-2.enabled").replace("%arg-2%", target.getName()));
                 playersender.sendMessage(target.getPlayer(), command.getString("commands.socialspy.player.enabled"));
-                sound.setSound(player.getUniqueId(), "sounds.on-socialspy.enable");
             }
+            sound.setSound(player.getUniqueId(), "sounds.on-socialspy.enable");
             return true;
         }
 
@@ -129,7 +124,6 @@ public class SocialSpyCommand implements CommandClass{
                 }
                 socialspy.unset(player.getUniqueId());
                 playersender.sendMessage(player.getPlayer(), command.getString("commands.socialspy.player.disabled"));
-                sound.setSound(player.getUniqueId(), "sounds.on-socialspy.disable");
             } else {
                 String targetname = target.getName();
 
@@ -147,9 +141,8 @@ public class SocialSpyCommand implements CommandClass{
 
                 playersender.sendMessage(player.getPlayer(), command.getString("commands.socialspy.arg-2.disabled").replace("%arg-2%", targetname));
                 playersender.sendMessage(target.getPlayer(), command.getString("commands.socialspy.player.disabled"));
-                sound.setSound(player.getUniqueId(), "sounds.on-socialspy.disable");
-
             }
+            sound.setSound(player.getUniqueId(), "sounds.on-socialspy.disable");
             return true;
         } else {
             playersender.sendMessage(sender, messages.getString("error.unknown-arg"));

@@ -2,7 +2,7 @@ package code.events;
 
 import code.CacheManager;
 import code.Manager;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 import code.utils.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -32,6 +32,7 @@ public class QuitListener implements Listener{
         Map<UUID, UUID> reply = cache.getReply();
         Set<UUID> socialspy  = cache.getSocialSpy();
         Set<UUID> msgtoggle = cache.getMsgToggle();
+        Set<UUID> playersound = cache.getPlayerSounds();
 
         Player you = event.getPlayer();
 
@@ -56,6 +57,9 @@ public class QuitListener implements Listener{
         }
         if (msgtoggle.contains(you.getUniqueId())){
             msgtoggle.remove(you.getUniqueId());
+        }
+        if (playersound.contains(you.getUniqueId())){
+            playersound.remove(you.getUniqueId());
         }
 
     }

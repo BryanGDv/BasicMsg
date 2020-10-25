@@ -1,24 +1,18 @@
 package code.commands;
 
 import code.CacheManager;
-import code.modules.IgnoreMethod;
 import code.modules.MsgToggleMethod;
 import code.registry.ConfigManager;
-import code.modules.PlayerMessage;
-import code.modules.Color;
+import code.modules.player.PlayerMessage;
+import code.modules.player.Color;
 import code.sounds.SoundManager;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.Flag;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
-import me.fixeddev.commandflow.annotated.annotation.Text;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import code.BasicMsg;
 import code.utils.Configuration;
 import code.Manager;
 
@@ -146,8 +140,7 @@ public class MsgCommand implements CommandClass{
 
         String message = String.join(" ", msg);
 
-        if (sender.hasPermission(config.getString("config.perms.color"))) {
-
+        if (sender.hasPermission(config.getString("config.perms.chat-color"))) {
             message = Color.color(msg);
         }
 

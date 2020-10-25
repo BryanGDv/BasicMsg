@@ -1,7 +1,7 @@
 
 #
 # BasicMsg by zProgramm
-# Version: 1.1
+# Version: 1.2
 #
 
 
@@ -14,7 +14,7 @@ config:
   e-variable: "%e"
 
   perms:
-    color: bmsg.color
+    chat-color: bmsg.chat.color
     reload: bmsg.reload
     socialspy: bmsg.socialspy
     toggle-admin: bmsg.mtoggle.admin

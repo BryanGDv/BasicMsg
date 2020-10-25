@@ -7,6 +7,7 @@ error:
   unknown-arg: "%c &fUnknown args."
   no-perms: "%c &fYou don't have permission to do this."
   no-reply: "%c &fYou didn't talk with anyone."
+  no-sound: "%c &fYou can't use the sound option."
   ignore:
     already-unignored: "%e &fThe player was already unignored."
     ignore-yourself: "%e &fYou can't ignore yourself."

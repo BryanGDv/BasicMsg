@@ -18,12 +18,15 @@ public class JoinListener implements Listener {
     private final Manager manager;
 
     private final Configuration players;
+    private final Configuration sounds;
+
     private final CacheManager cache;
 
     public JoinListener(Manager manager) {
         this.manager = manager;
         // All methods:
         this.players = manager.getFiles().getPlayers();
+        this.sounds = manager.getFiles().getSounds();
         this.cache = manager.getCache();
     }
     @EventHandler
@@ -38,6 +41,11 @@ public class JoinListener implements Listener {
         if (!ignorelist.containsKey(uuid) && (!(playerlist.isEmpty()))){
             ignorelist.put(uuid, playerlist);
         }
+
+        if (sounds.getBoolean("sounds.enabled-all")){
+            cache.getPlayerSounds().add(event.getPlayer().getUniqueId());
+        }
+
         return true;
     }
 }

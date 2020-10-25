@@ -1,8 +1,10 @@
 package code.commands;
 
+import code.CacheManager;
+import code.modules.PlayerSoundMethod;
 import code.registry.ConfigManager;
 import code.Manager;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
@@ -13,6 +15,9 @@ import org.bukkit.entity.Player;
 import code.BasicMsg;
 import code.utils.Configuration;
 import code.utils.VariableManager;
+
+import java.util.Set;
+import java.util.UUID;
 
 public class BmsgCommand implements CommandClass {
 
@@ -29,10 +34,14 @@ public class BmsgCommand implements CommandClass {
 
         ConfigManager files = manager.getFiles();
         VariableManager variable = manager.getVariables();
+
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
+        PlayerSoundMethod playersound = manager.getPlayerMethods().getPlayerSoundMethod();
 
         SoundManager sound = manager.getSounds();
+        CacheManager cache = manager.getCache();
 
+        Configuration soundfile = files.getSounds();
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
@@ -47,7 +56,7 @@ public class BmsgCommand implements CommandClass {
 
         if (args == null) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload]");
+            playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
             sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
@@ -62,6 +71,7 @@ public class BmsgCommand implements CommandClass {
             }
             playersender.sendMessage(sender, command.getString("commands.bmsg.load"));
             this.getReloadEvent(sender);
+            return true;
 
         }if (args.equalsIgnoreCase("support")) {
             if (manager.getFiles().getConfig().getBoolean("config.allow-support")) {
@@ -74,9 +84,24 @@ public class BmsgCommand implements CommandClass {
                 sound.setSound(player.getUniqueId(), "sounds.error");
             }
             return true;
+
+        } if (args.equalsIgnoreCase("sounds")){
+            Set<UUID> sounds = cache.getPlayerSounds();
+            if (!(soundfile.getBoolean("sounds.enabled-all"))){
+                playersender.sendMessage(sender, messages.getString("error.no-sound"));
+                return true;
+            }
+            if (!(sounds.contains(player.getUniqueId()))){
+                playersound.set(player.getUniqueId());
+                playersender.sendMessage(sender, command.getString("commands.bmsg.sounds.enabled"));
+                sound.setSound(player.getUniqueId(), "sounds.enable-mode");
+            }else{
+                playersound.unset(player.getUniqueId());
+                playersender.sendMessage(sender, command.getString("commands.bmsg.sounds.disabled"));
+            }
         } else {
             playersender.sendMessage(sender, messages.getString("error.unknown-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload]");
+            playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
             sound.setSound(player.getUniqueId(), "sounds.error");
         }
         return true;

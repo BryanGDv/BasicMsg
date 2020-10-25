@@ -1,7 +1,7 @@
 package code.modules;
 
 import code.Manager;
-import me.clip.placeholderapi.util.Msg;
+import code.modules.player.PlayerMessage;
 
 public class MethodManager{
 
@@ -9,6 +9,7 @@ public class MethodManager{
     private IgnoreMethod ignoreMethod;
     private PlayerMessage playerMessage;
     private MsgToggleMethod msgToggleMethod;
+    private PlayerSoundMethod playerSoundMethod;
 
     private final Manager manager;
 
@@ -21,6 +22,7 @@ public class MethodManager{
         socialSpyMethod = new SocialSpyMethod(manager);
         msgToggleMethod = new MsgToggleMethod(manager);
         playerMessage = new PlayerMessage(manager);
+        playerSoundMethod = new PlayerSoundMethod(manager);
 
         manager.getLogs().log("Method registered");
 
@@ -29,6 +31,9 @@ public class MethodManager{
     public MsgToggleMethod getMsgToggleMethod(){
         return msgToggleMethod;
     }
+    public PlayerSoundMethod getPlayerSoundMethod(){
+        return playerSoundMethod;
+    }
     public SocialSpyMethod getSocialSpyMethod(){
         return socialSpyMethod;
     }
@@ -36,7 +41,6 @@ public class MethodManager{
     public IgnoreMethod getIgnoreMethod(){
         return ignoreMethod;
     }
-
     public PlayerMessage getSender(){
         return playerMessage;
     }

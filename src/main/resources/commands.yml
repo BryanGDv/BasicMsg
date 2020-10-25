@@ -32,11 +32,17 @@ commands:
     load: "%c &fReloading plugin..."
     reload: "%c &fPlugin reloaded!"
 
+    sounds:
+      enabled: "%c &fNow you can hear the sounds of the plugin."
+      disabled: "%c &fNow you can't hear the sounds of the plugin."
+
   ignore:
     player-ignored: "%c &fNow you can't watch messages from &c%player%&f."
     player-unignored: "%c &fNow you can watch messages from &c%player%&f."
 
     list-ignoredplayers: "&fList of ignored players:"
+    nobody-ignored: "%e &fYou aren't ignoring anybody."
+
     space: "&8->"
 
   socialspy:

@@ -1,14 +1,9 @@
 package code;
 
-import code.modules.Color;
 import code.utils.UpdateCheck;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
 
 public class BasicMsg extends JavaPlugin {
 

@@ -10,8 +10,10 @@ public class CacheManager{
 
     private final Map<UUID, List<String>> ignoreCache = new HashMap<>();
     private final Map<UUID, UUID> replyCache = new HashMap<>();
+
     private final Set<UUID> socialSpyCache = new HashSet<>();
     private final Set<UUID> msgtoggleCache = new HashSet<>();
+    private final Set<UUID> playerSounds = new HashSet<>();
 
     private final Manager manager;
 
@@ -38,5 +40,9 @@ public class CacheManager{
 
     public Set<UUID> getMsgToggle(){
         return msgtoggleCache;
+    }
+
+    public Set<UUID> getPlayerSounds(){
+        return playerSounds;
     }
 }

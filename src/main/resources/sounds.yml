@@ -1,6 +1,16 @@
+#
+# Sound System:
+# Sounds 1.8/1.9: https://www.spigotmc.org/wiki/cc-sounds-list/
+#
+
 sounds:
   enabled-all: true
   vol: 1
+
+  enable-mode:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
 
   error:
     enabled: true
@@ -67,6 +77,6 @@ sounds:
 
   on-reply-player:
     enabled: true
-    sound:
+    sound: LEVEL_UP
     pitch: 1
 

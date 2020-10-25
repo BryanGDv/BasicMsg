@@ -3,7 +3,7 @@ package code.commands;
 import code.CacheManager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
@@ -81,7 +81,7 @@ public class IgnoreCommand implements CommandClass{
             if (ignorelist.containsKey(playeruuid)) {
 
                 if (ignoredlist == null){
-                    playersender.sendMessage(player, messages.getString("error.ignore.anybody"));
+                    playersender.sendMessage(player, command.getString("commands.ignore.nobody-ignored"));
                 } else {
                     playersender.sendMessage(player, command.getString("commands.ignore.list-ignoredplayers"));
                     for (String playersignored : ignoredlist) {
@@ -93,7 +93,7 @@ public class IgnoreCommand implements CommandClass{
 
             }
             playersender.sendMessage(player, command.getString("commands.ignore.space"));
-            sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-list");
+            sound.setSound(playeruuid, "sounds.on-list");
             return true;
         }
 

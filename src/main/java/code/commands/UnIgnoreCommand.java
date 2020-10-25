@@ -1,13 +1,12 @@
 package code.commands;
 
-import code.BasicMsg;
 import code.CacheManager;
 import code.Manager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.sounds.SoundManager;
 import code.utils.Configuration;
-import code.modules.PlayerMessage;
+import code.modules.player.PlayerMessage;
 
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
