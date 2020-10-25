@@ -1,5 +1,6 @@
 package code;
 
+import code.api.API;
 import code.utils.UpdateCheck;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -8,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BasicMsg extends JavaPlugin {
 
     private Manager basicMsg;
+    private API api;
 
     @Override
     public void onEnable() {
@@ -22,12 +24,17 @@ public class BasicMsg extends JavaPlugin {
         basicMsg.getLogs().log("- Plugin successfull loaded.", 2);
 
     }
+
+    public API getAPI(){
+        return api;
+    }
     public void onDisable() {
         getLogger().info("Thx for using this plugin <3.");
         getDisableMessage();
     }
     public void registerManaging() {
 
+        api = new API();
         basicMsg = new Manager(this);
 
         if (basicMsg.getFiles().getConfig().getBoolean("config.metrics")) {

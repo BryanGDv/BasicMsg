@@ -42,6 +42,7 @@ public class CacheManager{
         return msgtoggleCache;
     }
 
+
     public Set<UUID> getPlayerSounds(){
         return playerSounds;
     }
