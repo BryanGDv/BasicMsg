@@ -1,4 +1,4 @@
-# BasicMsg [1.1]
+# BasicMsg [1.2]
 - Created in 17/10/20
 
 
