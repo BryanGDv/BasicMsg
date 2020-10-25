@@ -48,6 +48,10 @@ Note: You can modify the perms in the config.yml.
 - bmsg.mtoggle.admin: To toggle your private messages.
 
 ## 4. Sounds:
-- In maintenance.
+- You can put the sounds:
+- Link: https://www.spigotmc.org/wiki/cc-sounds-list/
+
+Note: If your server is 1.9+, the mode will be disabled [because of the SOUND ID, to avoid errors].
+Obiously, you can activate again.
 
 Thanks for downloading the plugin <3.
