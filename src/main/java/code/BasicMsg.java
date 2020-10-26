@@ -38,9 +38,10 @@ public class BasicMsg extends JavaPlugin {
 
     public void registerManaging() {
 
-        api = new BasicAPI(basicMsg);
-        basicMsg.getLogs().log("Loaded API.");
         basicMsg = new Manager(this);
+        basicMsg.getLogs().log("Loading API...");
+        api = new BasicAPI(basicMsg);
+        basicMsg.getLogs().log("Loaded.");
 
         if (basicMsg.getFiles().getConfig().getBoolean("config.metrics")) {
             Metrics metrics = new Metrics(this, 9139);
