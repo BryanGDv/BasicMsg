@@ -28,9 +28,24 @@ Requeriments:
 - Compatible with PlaceholderAPI.
 
 ## 2. API:
+- You can use maven:
 
-- In maintenance.
-
+Step 1. Put the repositories.
+```xml
+<repository>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
+</repository>
+ ```
+Step 2. Add the dependencies.
+```xml
+<dependency>
+  <groupId>com.github.turbodavid999</groupId>
+  <artifactId>BasicMsg</artifactId>
+  <version>1.3</version>
+  <scope>provided</scope>
+</dependency>
+```
 ## 3. Commands:
 
 - /msg [player] [message]: To send a message to other player.
