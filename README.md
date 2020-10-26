@@ -46,6 +46,8 @@ Step 2. Add the dependencies.
   <scope>provided</scope>
 </dependency>
 ```
+Note: You need to use in plugin.yml **soft-depend** or **depend** to the plugin, to run your plugin before BasicMsg [To avoid null bugs].
+
 ## 3. Commands:
 
 - /msg [player] [message]: To send a message to other player.
