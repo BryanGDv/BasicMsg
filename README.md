@@ -1,4 +1,4 @@
-# BasicMsg [1.2.1]
+# BasicMsg [1.4]
 - Created in 17/10/20
 
 
@@ -23,6 +23,7 @@ Messages:
 
 Utils:
 - You can put sound in the commands.
+- You can use the chatformat with hovertext!.
 
 Requeriments:
 - Compatible with PlaceholderAPI.
