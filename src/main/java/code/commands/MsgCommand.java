@@ -2,9 +2,9 @@ package code.commands;
 
 import code.CacheManager;
 import code.modules.MsgToggleMethod;
+import code.modules.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.modules.player.PlayerMessage;
-import code.modules.player.Color;
 import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
@@ -140,8 +140,8 @@ public class MsgCommand implements CommandClass{
 
         String message = String.join(" ", msg);
 
-        if (sender.hasPermission(config.getString("config.perms.chat-color"))) {
-            message = Color.color(msg);
+        if (sender.hasPermission(config.getString("config.perms.msg-color"))) {
+            message = PlayerStatic.setColor(msg);
         }
 
         String playerFormat = command.getString("commands.msg-reply.player");
@@ -171,7 +171,7 @@ public class MsgCommand implements CommandClass{
                         .replace("%player%", sender.getName())
                         .replace("%arg-1%", target.getName())
                         .replace("%message%", message));
-                sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-socialspy.receive-msg");
+                sound.setSound(watcher.getPlayer().getUniqueId(), "sounds.on-socialspy.receive-msg");
             }
         }
 

@@ -1,0 +1,8 @@
+utils:
+  chat:
+    enabled: true
+    format: "&8| &f%player% &7> &f%message%"
+    hover:
+      - "&8&m------[&fHover]&8&m-------"
+      - "&fPlayer: &a%player%"
+      - "&fOnline: &a%online%"

@@ -1,8 +1,13 @@
 package code.registry;
 
 import code.BasicMsg;
+import code.CacheManager;
+import code.Manager;
 import code.utils.Configuration;
 import code.debug.ErrorManager;
+import jdk.nashorn.internal.runtime.logging.DebugLogger;
+
+import java.util.Map;
 
 public class ConfigManager {
 
@@ -13,32 +18,51 @@ public class ConfigManager {
     private Configuration players;
     private Configuration messages;
     private Configuration sounds;
+    private Configuration utils;
 
-    private final ErrorManager debug;
     private final BasicMsg plugin;
+    private final Manager manager;
 
-    public ConfigManager(BasicMsg plugin, ErrorManager debug) {
+    public ConfigManager(BasicMsg plugin, Manager manager) {
         this.plugin = plugin;
-        this.debug = debug;
+        this.manager = manager;
     }
 
     public void setup() {
-        config = new Configuration(plugin, "config.yml");
-        debug.log("config.yml loaded!");
-        command = new Configuration(plugin, "commands.yml");
-        debug.log("command.yml loaded!");
-        players = new Configuration(plugin, "players.yml");
-        debug.log("players.yml loaded!");
-        messages = new Configuration(plugin, "messages.yml");
-        debug.log("messages.yml loaded!");
-        sounds = new Configuration(plugin, "sounds.yml");
-        debug.log("sounds.yml loaded!");
+        Map<String, Configuration> configFiles = manager.getCache().getConfigFiles();
 
+        config = this.setConfiguration("config.yml");
+        configFiles.put("config", config);
+
+        command = this.setConfiguration("commands.yml");
+        configFiles.put("commands", command);
+
+        players = this.setConfiguration("players.yml");
+        configFiles.put("players", players);
+
+        messages = this.setConfiguration("messages.yml");
+        configFiles.put("messages", messages);
+
+        sounds = this.setConfiguration("sounds.yml");
+        configFiles.put("sounds", sounds);
+
+        utils = this.setConfiguration("utils.yml");
+        configFiles.put("utils", utils);
         plugin.getLogger().info("Config loaded!");
     }
 
+    public Configuration setConfiguration(String string){
+        ErrorManager log = manager.getLogs();
+        log.log(string + " loaded!");
+        return new Configuration(plugin, string);
+
+    }
     public Configuration getConfig() {
         return config;
+    }
+
+    public Configuration getBasicUtils(){
+        return utils;
     }
 
     public Configuration getCommand() {

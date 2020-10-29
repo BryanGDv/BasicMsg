@@ -2,14 +2,17 @@ package code;
 
 import code.Manager;
 import code.debug.ErrorManager;
-import com.avaje.ebeaninternal.server.idgen.UuidIdGenerator;
+import code.utils.Configuration;
 
+
+import java.io.File;
 import java.util.*;
 
 public class CacheManager{
 
     private final Map<UUID, List<String>> ignoreCache = new HashMap<>();
     private final Map<UUID, UUID> replyCache = new HashMap<>();
+    private final Map<String, Configuration> config = new HashMap<>();
 
     private final Set<UUID> socialSpyCache = new HashSet<>();
     private final Set<UUID> msgtoggleCache = new HashSet<>();
@@ -30,6 +33,10 @@ public class CacheManager{
         return ignoreCache;
     }
 
+    public Map<String, Configuration> getConfigFiles(){
+        return config;
+    }
+
     public Map<UUID, UUID> getReply(){
         return replyCache;
     }
@@ -41,7 +48,6 @@ public class CacheManager{
     public Set<UUID> getMsgToggle(){
         return msgtoggleCache;
     }
-
 
     public Set<UUID> getPlayerSounds(){
         return playerSounds;

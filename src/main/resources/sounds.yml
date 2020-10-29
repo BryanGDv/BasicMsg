@@ -27,6 +27,11 @@ sounds:
     sound: LEVEL_UP
     pitch: 1
 
+  on-reload:
+    enabled: true
+    sound: LEVEL_UP
+    pitch: 1
+
   on-reply:
     enabled: true
     sound: LEVEL_UP

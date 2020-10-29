@@ -1,10 +1,10 @@
 package code.commands;
 
 import code.CacheManager;
+import code.modules.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.player.PlayerMessage;
-import code.modules.player.Color;
 import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
@@ -74,11 +74,11 @@ public class ReplyCommand implements CommandClass {
 
             CommandSender targetsender = target.getPlayer();
 
-            if (sender.hasPermission(config.getString("config.perms.color"))){
-                message = Color.color(message);
+            if (sender.hasPermission(config.getString("config.perms.msg-color"))){
+                message = PlayerStatic.setColor(message);
             }
 
-            playersender.sendMessage(player, Color.color(command.getString ("commands.msg-reply.player")
+            playersender.sendMessage(player, PlayerStatic.setColor(command.getString ("commands.msg-reply.player")
                     .replace("%player%", sender.getName())
                     .replace("%arg-1%", target.getName()))
                     , true, message);
@@ -87,7 +87,7 @@ public class ReplyCommand implements CommandClass {
             List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
 
             if (!(ignoredlist.contains(target.getName()))) {
-                playersender.sendMessage(targetsender, Color.color(command.getString("commands.msg-reply.player")
+                playersender.sendMessage(targetsender, PlayerStatic.setColor(command.getString("commands.msg-reply.player")
                                 .replace("%player%", sender.getName())
                                 .replace("%arg-1%", target.getName()))
                         , true, message);

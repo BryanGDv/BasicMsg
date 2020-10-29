@@ -4,6 +4,7 @@ error:
   player-offline: "%c &fThat player is not online."
   same-player: "%c &fYou cant talk to yourself."
   no-arg: "%c &fUnknown argument"
+  option-disabled: "%c &fSrry &a%player%, &fthe option &a%option% &fis disabled :(."
   unknown-arg: "%c &fUnknown args."
   no-perms: "%c &fYou don't have permission to do this."
   no-reply: "%c &fYou didn't talk with anyone."

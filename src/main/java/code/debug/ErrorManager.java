@@ -10,11 +10,13 @@ import java.util.Date;
 public class ErrorManager {
 
     private final BasicMsg plugin;
+
     private File file;
 
     public ErrorManager(BasicMsg plugin){
         this.plugin = plugin;
         setup();
+        log("Loading plugin..");
     }
 
     public void log(String string, int number) {
@@ -25,7 +27,7 @@ public class ErrorManager {
                 break;
 
             case 1:
-                Bukkit.getLogger().info("A error ocurred. Please check debug");
+                plugin.getLogger().info("A error ocurred. Please check debug");
                 this.getLogger(string, "ERROR");
                 break;
 

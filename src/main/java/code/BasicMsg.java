@@ -19,7 +19,7 @@ public class BasicMsg extends JavaPlugin {
         registerManaging();
         registerPlaceholders();
 
-        getLogger().info("Plugin created by zProgram.");
+        getLogger().info("Plugin created by "+getDescription().getAuthors() + "");
         getLogger().info("You are using version " + getDescription().getVersion() + ".");
         getLogger().info("If you want support, you can join in: https://discord.gg/wQThjXs");
 
@@ -50,6 +50,9 @@ public class BasicMsg extends JavaPlugin {
             getUpdateChecker();
         }
 
+    }
+    public Manager getManager(){
+        return basicMsg;
     }
     public void getUpdateChecker(){
         getLogger().info("Checking updating checker..");

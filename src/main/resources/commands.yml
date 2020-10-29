@@ -20,6 +20,7 @@ commands:
     arg-1:
       activated: "%c &fNow nobody can messaging &a%arg-1%&f."
       unactivated: "%c &fNow everyone can messaging &a%arg-1%&f."
+
     msg: "%c &fSrry, &a%player% &fhas the pm disabled."
     left: "%c &fDear %player%, &fthe player &a(%arg-1%) &fthat you talked or talked with you, left the game."
 
@@ -30,7 +31,9 @@ commands:
       - "&f/reply [<message>] &8: &fTo reply."
       - "&f/bmsg reload &8: &fTo reload the plugin."
     load: "%c &fReloading plugin..."
+    load-file: "%c &fReloading file.."
     reload: "%c &fPlugin reloaded!"
+    reload-file: "%c &f%file% &freloaded!"
 
     sounds:
       enabled: "%c &fNow you can hear the sounds of the plugin."

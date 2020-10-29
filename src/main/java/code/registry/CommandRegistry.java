@@ -45,6 +45,7 @@ public class CommandRegistry implements LoaderService{
         registerCommands(new ReplyCommand(manager, manager.getCache()));
         registerCommands(new SocialSpyCommand(manager));
         registerCommands(new UnIgnoreCommand(manager, manager.getCache()));
+        registerCommands(new ChatCommand(plugin, manager));
 
         manager.getLogs().log("Commands loaded!");
         plugin.getLogger().info("Commands loaded!");

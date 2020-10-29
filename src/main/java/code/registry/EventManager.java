@@ -2,6 +2,7 @@ package code.registry;
 
 import code.BasicMsg;
 import code.debug.ErrorManager;
+import code.events.ChatFormat;
 import code.events.ChatListener;
 import code.events.JoinListener;
 import code.events.QuitListener;
@@ -31,6 +32,8 @@ public class EventManager {
         debug.log("ChatListener loaded!");
         pl.registerEvents(new JoinListener(manager), plugin);
         debug.log("JoinListener loaded!");
+        pl.registerEvents(new ChatFormat(manager), plugin);
+        debug.log("ChatFormat loaded!");
 
         plugin.getLogger().info("Events loaded!");
     }

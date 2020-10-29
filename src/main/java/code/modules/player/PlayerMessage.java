@@ -40,7 +40,7 @@ public class PlayerMessage{
 
         message = manager.getVariables().replaceString(message);
         
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return PlayerStatic.setColor(message);
     }
 
     public String getMessage(String message, Boolean color) {
@@ -48,7 +48,7 @@ public class PlayerMessage{
         message = manager.getVariables().replaceString(message);
 
         if (color) {
-            return ChatColor.translateAlternateColorCodes('&', message);
+            return PlayerStatic.setColor(message);
         }
 
         return message;
@@ -56,6 +56,6 @@ public class PlayerMessage{
     private String getPlaceholders(CommandSender sender, String path){
 
         Player player = (Player) sender;
-        return PlaceholderAPI.setPlaceholders(player, path);
+        return PlayerStatic.setVariables(player, path);
     }
 }

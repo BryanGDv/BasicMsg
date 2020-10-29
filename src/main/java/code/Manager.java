@@ -13,43 +13,47 @@ public class Manager {
 
     private final BasicMsg plugin;
 
-    private final VariableManager variables;
-    private final ErrorManager debug;
-    private final MethodManager methodManager;
+    private VariableManager variables;
+    private ErrorManager debug;
+    private MethodManager methodManager;
 
-    private final CommandRegistry commandRegistry;
-    private final EventManager eventManager;
-    private final ConfigManager configManager;
+    private CommandRegistry commandRegistry;
+    private EventManager eventManager;
+    private ConfigManager configManager;
 
     public String test;
 
-    private final SoundManager soundManager;
+    private SoundManager soundManager;
 
-    private final CacheManager cache;
+    private CacheManager cache;
 
 
-    public Manager(BasicMsg plugin){
+    public Manager(BasicMsg plugin) {
         this.plugin = plugin;
+        setup();
+    }
 
-        this.debug = new ErrorManager(plugin);
-        debug.log("Loading plugin..");
-        this.cache = new CacheManager(this);
+    public void setup(){
 
-        this.configManager = new ConfigManager(plugin, debug);
+        debug = new ErrorManager(plugin);
+
+        cache = new CacheManager(this);
+
+        configManager = new ConfigManager(plugin, this);
         configManager.setup();
 
-        this.soundManager = new SoundManager(this);
+        soundManager = new SoundManager(this);
         soundManager.setup();
 
-        this.variables = new VariableManager(configManager, this);
+        variables = new VariableManager(configManager, this);
 
-        this.methodManager = new MethodManager(this);
+        methodManager = new MethodManager(this);
         methodManager.setup();
 
-        this.commandRegistry = new CommandRegistry(plugin, this);
+        commandRegistry = new CommandRegistry(plugin, this);
         commandRegistry.setup();
 
-        this.eventManager = new EventManager(plugin, this);
+        eventManager = new EventManager(plugin, this);
         eventManager.setup();
 
     }

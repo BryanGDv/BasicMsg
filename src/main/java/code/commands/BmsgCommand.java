@@ -9,13 +9,17 @@ import code.sounds.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import code.BasicMsg;
 import code.utils.Configuration;
 import code.utils.VariableManager;
 
+import java.io.File;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,7 +34,7 @@ public class BmsgCommand implements CommandClass {
     }
 
     @Command(names = {"bmsg", "bm"})
-    public boolean help(CommandSender sender, @OptArg String args) {
+    public boolean help(CommandSender sender, @OptArg String arg1, @OptArg String arg2) {
 
         ConfigManager files = manager.getFiles();
         VariableManager variable = manager.getVariables();
@@ -54,26 +58,41 @@ public class BmsgCommand implements CommandClass {
 
         Player player = (Player) sender;
 
-        if (args == null) {
+        if (arg1 == null) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
             sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
-        if (args.equalsIgnoreCase("help")) {
+        if (arg1.equalsIgnoreCase("help")) {
             variable.loopString(sender, command, "commands.bmsg.help");
             return true;
 
-        }if (args.equalsIgnoreCase("reload")) {
+        }if (arg1.equalsIgnoreCase("reload")) {
             if (!(sender.hasPermission(config.getString("config.perms.reload")))) {
                 playersender.sendMessage(sender, messages.getString("error.no-perms"));
                 return true;
             }
-            playersender.sendMessage(sender, command.getString("commands.bmsg.load"));
-            this.getReloadEvent(sender);
+            if (arg2 == null) {
+                playersender.sendMessage(sender, messages.getString("error.no-arg"));
+                playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg reload [file/all]");
+                sound.setSound(player.getUniqueId(), "sounds.error");
+                return true;
+            }
+
+            if (arg2.equalsIgnoreCase("all")) {
+                playersender.sendMessage(sender, command.getString("commands.bmsg.load"));
+                this.getReloadEvent(sender, "all");
+
+            } else {
+                playersender.sendMessage(sender, command.getString("commands.bmsg.load-file"));
+                this.getReloadEvent(sender, arg2);
+
+                return true;
+            }
             return true;
 
-        }if (args.equalsIgnoreCase("support")) {
+        }if (arg1.equalsIgnoreCase("support")) {
             if (manager.getFiles().getConfig().getBoolean("config.allow-support")) {
                 playersender.sendMessage(sender, "&b[Server] &8| &fIf you want support of the plugin:");
                 playersender.sendMessage(sender, "&8- &fJoin: &ahttps://discord.gg/wQThjXs");
@@ -85,7 +104,7 @@ public class BmsgCommand implements CommandClass {
             }
             return true;
 
-        } if (args.equalsIgnoreCase("sounds")){
+        } if (arg1.equalsIgnoreCase("sounds")){
             Set<UUID> sounds = cache.getPlayerSounds();
             if (!(soundfile.getBoolean("sounds.enabled-all"))){
                 playersender.sendMessage(sender, messages.getString("error.no-sound"));
@@ -107,17 +126,37 @@ public class BmsgCommand implements CommandClass {
         return true;
     }
 
-    public void getReloadEvent(CommandSender sender){
+    public void getReloadEvent(CommandSender sender, String string){
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
+
+                PlayerMessage playersender = manager.getPlayerMethods().getSender();
+                Player player = (Player) sender;
+
                 ConfigManager files = manager.getFiles();
-                files.getConfig().reload();
-                files.getMessages().reload();
-                files.getCommand().reload();
-                files.getSounds().reload();
-                files.getPlayers().reload();
-                manager.getPlayerMethods().getSender().sendMessage(sender, manager.getFiles().getCommand().getString("commands.bmsg.reload"));
+                SoundManager sound = manager.getSounds();
+
+                Map<String, Configuration> fileMap = manager.getCache().getConfigFiles();
+
+                if (fileMap.get(string) == null){
+                    if (string.equalsIgnoreCase("all")) {
+                        for (Configuration config : fileMap.values()){
+                            config.reload();
+                        }
+                        playersender.sendMessage(sender, files.getCommand().getString("commands.bmsg.reload"));
+                        return;
+                    }
+                    playersender.sendMessage(sender, files.getMessages().getString("error.unknown-arg"));
+                    playersender.sendMessage(sender, "&8- &fFiles: &a[commands, config, messages, players, sounds, utils]");
+                    sound.setSound(player.getUniqueId(), "sounds.error");
+                }else{
+                    fileMap.get(string).reload();
+                    playersender.sendMessage(sender, files.getCommand().getString("commands.bmsg.reload-file").replace("%file%", StringUtils.capitalize(string)));
+                    sound.setSound(player.getUniqueId(), "sounds.on-reload");
+
+                }
+
             }
         }, 20L * 3);
     }

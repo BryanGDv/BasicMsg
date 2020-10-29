@@ -1,5 +1,7 @@
 package code.utils;
 
+import code.BasicMsg;
+import code.CacheManager;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -46,6 +48,7 @@ public final class Configuration extends YamlConfiguration {
             }
 
             load(file);
+
         } catch (InvalidConfigurationException | IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Creation of Configuration '" + fileName + "' failed.", e);
         }

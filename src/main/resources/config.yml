@@ -14,7 +14,9 @@ config:
   e-variable: "%e"
 
   perms:
+    msg-color: bmsg.msg.color
     chat-color: bmsg.chat.color
+    chat-reload: bmsg.chat.reload
     reload: bmsg.reload
     socialspy: bmsg.socialspy
     toggle-admin: bmsg.mtoggle.admin
