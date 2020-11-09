@@ -35,6 +35,9 @@ commands:
     reload: "%c &fPlugin reloaded!"
     reload-file: "%c &f%file% &freloaded!"
 
+    debug:
+      list-worlds: "&c &fList of worlds:"
+      worldpath-info: "%c &fInfo of &a%world%&f:"
     sounds:
       enabled: "%c &fNow you can hear the sounds of the plugin."
       disabled: "%c &fNow you can't hear the sounds of the plugin."

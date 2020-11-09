@@ -4,11 +4,14 @@ error:
   player-offline: "%c &fThat player is not online."
   same-player: "%c &fYou cant talk to yourself."
   no-arg: "%c &fUnknown argument"
-  option-disabled: "%c &fSrry &a%player%, &fthe option &a%option% &fis disabled :(."
+  command-disabled: "%c &fSrry &a%player&f, the command &a%command% is disabled :(."
+  option-disabled: "%c &fSrry &a%player%&f,the option &a%option% &fis disabled :(."
   unknown-arg: "%c &fUnknown args."
   no-perms: "%c &fYou don't have permission to do this."
   no-reply: "%c &fYou didn't talk with anyone."
   no-sound: "%c &fYou can't use the sound option."
+  debug:
+    unknown-world: "%e &fUnknown world: &a%world%&f."
   ignore:
     already-unignored: "%e &fThe player was already unignored."
     ignore-yourself: "%e &fYou can't ignore yourself."
@@ -19,3 +22,5 @@ error:
     arg-2-activated: "%e &c%arg-2% &fAlready activated the socialspy."
     arg-2-unactivated: "%e &c%arg-2% &fAlready unactivated the socialspy."
     anybody: "%e &fNobody have the socialspy activated."
+  sound:
+    no-exists: "%e &fThe sound no exists in that version :(."

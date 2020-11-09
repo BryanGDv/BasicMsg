@@ -1,8 +1,8 @@
 main: code.BasicMsg
 name: BasicMsg
-version: 1.4
+version: 1.5
 author: BryanGaming
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, Multiverse-Core]
 api-version: 1.13
 
 commands:

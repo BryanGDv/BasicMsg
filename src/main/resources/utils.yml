@@ -1,6 +1,27 @@
 utils:
   chat:
     enabled: true
+
+    # Per World Chat
+    per-world-chat:
+      enabled: true
+      all-worlds: true
+
+      worlds:
+        world:
+          - world_nether
+          - world_the_end
+
+    # Security
+    security:
+      anti-flood:
+        enabled: true
+        min-chars: 2
+      anti-repeat:
+        enabled: true
+        seconds: 2
+        message: "%c &fSrry, please, wait &a%seconds% &fseconds."
+
     format: "&8| &f%player% &7> &f%message%"
     hover:
       - "&8&m------[&fHover]&8&m-------"
