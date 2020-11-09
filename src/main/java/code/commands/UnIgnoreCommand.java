@@ -4,7 +4,7 @@ import code.CacheManager;
 import code.Manager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
 import code.modules.player.PlayerMessage;
 
@@ -49,6 +49,13 @@ public class UnIgnoreCommand implements CommandClass{
             return true;
         }
         Player player = (Player) sender;
+
+        if (!(manager.getPathManager().isCommandEnabled("unignore"))){
+            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "unignore"));
+            return true;
+        }
 
         if (target == null){
             playersender.sendMessage(sender, messages.getString("error.no-arg"));

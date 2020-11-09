@@ -1,11 +1,14 @@
 package code.modules.player;
 
 import code.Manager;
+import code.revisor.RevisorManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class PlayerMessage{
 
@@ -15,15 +18,15 @@ public class PlayerMessage{
         this.manager = manager;
     }
 
-    public void sendMessage(CommandSender sender, String path, Boolean color, String message) {
+    public void sendMessage(CommandSender sender, String path, String message, Boolean revisor) {
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             if (PlaceholderAPI.containsPlaceholders(path)) {
                 path = getPlaceholders(sender, path);
             }
         }
-
-        sender.sendMessage(getMessage(path, color).replace("%message%", message));
+        Player player = (Player) sender;
+        sender.sendMessage(getMessage(path, player.getUniqueId(), revisor).replace("%message%", message));
     }
 
 
@@ -43,12 +46,13 @@ public class PlayerMessage{
         return PlayerStatic.setColor(message);
     }
 
-    public String getMessage(String message, Boolean color) {
+    public String getMessage(String message, UUID uuid, Boolean revisor) {
 
         message = manager.getVariables().replaceString(message);
 
-        if (color) {
-            return PlayerStatic.setColor(message);
+        if (revisor) {
+            manager.getPlugin().getLogger().info("Loading Revisor..");
+            return RevisorManager.revisor(uuid, message);
         }
 
         return message;

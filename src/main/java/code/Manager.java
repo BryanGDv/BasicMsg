@@ -1,12 +1,17 @@
 package code;
 
-import code.debug.ErrorManager;
+import code.bukkitutils.WorldManager;
+import code.debug.DebugLogger;
 import code.modules.MethodManager;
 import code.registry.CommandRegistry;
 import code.registry.ConfigManager;
 import code.registry.EventManager;
-import code.sounds.SoundManager;
+import code.revisor.RevisorManager;
+import code.bukkitutils.SoundManager;
+import code.utils.PathManager;
 import code.utils.VariableManager;
+
+import java.nio.file.Path;
 
 
 public class Manager {
@@ -14,16 +19,19 @@ public class Manager {
     private final BasicMsg plugin;
 
     private VariableManager variables;
-    private ErrorManager debug;
     private MethodManager methodManager;
+
+    private DebugLogger debug;
+    private PathManager pathmanager;
 
     private CommandRegistry commandRegistry;
     private EventManager eventManager;
     private ConfigManager configManager;
 
-    public String test;
+    private RevisorManager revisorManager;
 
     private SoundManager soundManager;
+    private WorldManager worldManager;
 
     private CacheManager cache;
 
@@ -35,12 +43,16 @@ public class Manager {
 
     public void setup(){
 
-        debug = new ErrorManager(plugin);
+        debug = new DebugLogger(plugin);
 
         cache = new CacheManager(this);
 
         configManager = new ConfigManager(plugin, this);
         configManager.setup();
+
+        pathmanager = new PathManager(this);
+
+        worldManager = new WorldManager(this);
 
         soundManager = new SoundManager(this);
         soundManager.setup();
@@ -56,9 +68,20 @@ public class Manager {
         eventManager = new EventManager(plugin, this);
         eventManager.setup();
 
+        revisorManager = new RevisorManager(this);
+
+    }
+    public WorldManager getWorldManager(){
+        return worldManager;
+    }
+    public RevisorManager getRevisorManager() {
+        return revisorManager;
     }
 
-    public ErrorManager getLogs(){
+    public PathManager getPathManager(){
+        return pathmanager;
+    }
+    public DebugLogger getLogs(){
         return debug;
     }
 

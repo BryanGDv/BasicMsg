@@ -5,7 +5,7 @@ import code.modules.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.player.PlayerMessage;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -50,6 +50,13 @@ public class ReplyCommand implements CommandClass {
         Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
+        if (!(manager.getPathManager().isCommandEnabled("reply"))){
+            playersender.sendMessage(sender, lang.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "reply"));
+            return true;
+        }
+
         if (message.trim().isEmpty()) {
             playersender.sendMessage(sender, lang.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/reply [message]");
@@ -81,7 +88,7 @@ public class ReplyCommand implements CommandClass {
             playersender.sendMessage(player, PlayerStatic.setColor(command.getString ("commands.msg-reply.player")
                     .replace("%player%", sender.getName())
                     .replace("%arg-1%", target.getName()))
-                    , true, message);
+                    , message, true);
             sound.setSound(player.getUniqueId(), "sounds.on-reply");
 
             List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
@@ -90,7 +97,7 @@ public class ReplyCommand implements CommandClass {
                 playersender.sendMessage(targetsender, PlayerStatic.setColor(command.getString("commands.msg-reply.player")
                                 .replace("%player%", sender.getName())
                                 .replace("%arg-1%", target.getName()))
-                        , true, message);
+                        , message, true);
                 reply.replace(reply.get(player.getUniqueId()), player.getUniqueId());
                 sound.setSound(player.getUniqueId(), "sounds.on-reply");
             }

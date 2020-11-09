@@ -10,6 +10,7 @@ public class MethodManager{
     private PlayerMessage playerMessage;
     private MsgToggleMethod msgToggleMethod;
     private PlayerSoundMethod playerSoundMethod;
+    private ReplyMethod replyMethod;
 
     private final Manager manager;
 
@@ -23,6 +24,7 @@ public class MethodManager{
         msgToggleMethod = new MsgToggleMethod(manager);
         playerMessage = new PlayerMessage(manager);
         playerSoundMethod = new PlayerSoundMethod(manager);
+        replyMethod = new ReplyMethod(manager);
 
         manager.getLogs().log("Method registered");
 
@@ -40,6 +42,9 @@ public class MethodManager{
 
     public IgnoreMethod getIgnoreMethod(){
         return ignoreMethod;
+    }
+    public ReplyMethod getReplyMethod(){
+        return replyMethod;
     }
     public PlayerMessage getSender(){
         return playerMessage;

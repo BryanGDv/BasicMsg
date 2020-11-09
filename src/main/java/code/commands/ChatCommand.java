@@ -4,7 +4,7 @@ import code.BasicMsg;
 import code.Manager;
 import code.modules.player.PlayerMessage;
 import code.registry.ConfigManager;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
 import code.utils.VariableManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
@@ -46,6 +46,13 @@ public class ChatCommand implements CommandClass{
         }
 
         Player player = (Player) sender;
+
+        if (!(manager.getPathManager().isCommandEnabled("chat"))){
+            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "chat"));
+            return true;
+        }
 
         if (!(utils.getBoolean("utils.chat.enabled"))){
             playersender.sendMessage(sender, messages.getString("error.option-disabled")

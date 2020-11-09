@@ -1,11 +1,9 @@
 package code.registry;
 
 import code.BasicMsg;
-import code.CacheManager;
 import code.Manager;
+import code.debug.DebugLogger;
 import code.utils.Configuration;
-import code.debug.ErrorManager;
-import jdk.nashorn.internal.runtime.logging.DebugLogger;
 
 import java.util.Map;
 
@@ -52,7 +50,7 @@ public class ConfigManager {
     }
 
     public Configuration setConfiguration(String string){
-        ErrorManager log = manager.getLogs();
+        DebugLogger log = manager.getLogs();
         log.log(string + " loaded!");
         return new Configuration(plugin, string);
 

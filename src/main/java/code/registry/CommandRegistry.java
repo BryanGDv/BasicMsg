@@ -5,6 +5,7 @@ import code.commands.*;
 import code.commands.modules.CustomI18n;
 import code.Manager;
 
+import code.utils.Configuration;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
@@ -14,6 +15,8 @@ import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
 
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.factory.BukkitModule;
+
+import java.util.List;
 
 
 public class CommandRegistry implements LoaderService{
@@ -39,20 +42,25 @@ public class CommandRegistry implements LoaderService{
 
         commandManager.getTranslator().setProvider(new CustomI18n(manager));
 
-        registerCommands(new BmsgCommand(plugin , manager));
-        registerCommands(new IgnoreCommand(manager, manager.getCache()));
-        registerCommands(new MsgCommand(manager, manager.getCache()));
-        registerCommands(new ReplyCommand(manager, manager.getCache()));
-        registerCommands(new SocialSpyCommand(manager));
-        registerCommands(new UnIgnoreCommand(manager, manager.getCache()));
-        registerCommands(new ChatCommand(plugin, manager));
+        registerCommands("bmsg", new BmsgCommand(plugin , manager));
+        registerCommands("ignore", new IgnoreCommand(manager, manager.getCache()));
+        registerCommands("msg", new MsgCommand(manager, manager.getCache()));
+        registerCommands("reply", new ReplyCommand(manager, manager.getCache()));
+        registerCommands("socialspy", new SocialSpyCommand(manager));
+        registerCommands("unignore", new UnIgnoreCommand(manager, manager.getCache()));
+        registerCommands("chat" , new ChatCommand(plugin, manager));
 
         manager.getLogs().log("Commands loaded!");
         plugin.getLogger().info("Commands loaded!");
     }
 
-    public void registerCommands(CommandClass commandClass) {
-        commandManager.registerCommands(builder.fromClass(commandClass));
+    public void registerCommands(String commandName, CommandClass commandClass) {
+        if (manager.getPathManager().isCommandEnabled(commandName)) {
+            commandManager.registerCommands(builder.fromClass(commandClass));
+            manager.getLogs().log("Command: " + commandName + " loaded.");
+        } else {
+            manager.getLogs().log("Command: " + commandName + " unloaded.", 0);
+        }
     }
 
     private void createCommandManager() {

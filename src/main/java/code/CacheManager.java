@@ -1,11 +1,9 @@
 package code;
 
-import code.Manager;
-import code.debug.ErrorManager;
+import code.debug.DebugLogger;
 import code.utils.Configuration;
 
 
-import java.io.File;
 import java.util.*;
 
 public class CacheManager{
@@ -14,6 +12,8 @@ public class CacheManager{
     private final Map<UUID, UUID> replyCache = new HashMap<>();
     private final Map<String, Configuration> config = new HashMap<>();
 
+
+    private final Set<UUID> playercooldown = new HashSet<>();
     private final Set<UUID> socialSpyCache = new HashSet<>();
     private final Set<UUID> msgtoggleCache = new HashSet<>();
     private final Set<UUID> playerSounds = new HashSet<>();
@@ -23,10 +23,13 @@ public class CacheManager{
 
     public CacheManager(Manager manager){
         this.manager = manager;
-        ErrorManager debug = manager.getLogs();
+        DebugLogger debug = manager.getLogs();
         debug.log("IgnoreCache loaded");
         debug.log("ReplyCache loaded!");
         debug.log("SocialspyCache loaded!");
+    }
+    public Set<UUID> getPlayercooldown(){
+        return playercooldown;
     }
 
     public Map<UUID, List<String>> getIgnorelist(){

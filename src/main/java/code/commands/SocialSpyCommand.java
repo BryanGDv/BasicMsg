@@ -4,7 +4,7 @@ import code.modules.SocialSpyMethod;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.player.PlayerMessage;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -43,6 +43,13 @@ public class SocialSpyCommand implements CommandClass{
         }
 
         Player player = (Player) sender;
+
+        if (!(manager.getPathManager().isCommandEnabled("socialspy"))){
+            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "socialspy"));
+            return true;
+        }
 
         if (!(sender.hasPermission(config.getString("config.perms.socialspy")))) {
             playersender.sendMessage(sender, messages.getString("error.no-perms"));

@@ -4,7 +4,7 @@ import code.CacheManager;
 import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.modules.player.PlayerMessage;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 
@@ -52,6 +52,14 @@ public class IgnoreCommand implements CommandClass{
 
         Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
+
+        if (!(manager.getPathManager().isCommandEnabled("ignore"))){
+            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "ignore"));
+            return true;
+        }
+
 
         if (target == null) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));

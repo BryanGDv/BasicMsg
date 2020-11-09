@@ -1,7 +1,7 @@
 package code.registry;
 
 import code.BasicMsg;
-import code.debug.ErrorManager;
+import code.debug.DebugLogger;
 import code.events.ChatFormat;
 import code.events.ChatListener;
 import code.events.JoinListener;
@@ -20,9 +20,8 @@ public class EventManager {
         this.manager = manager;
     }
 
-
     public void setup() {
-        ErrorManager debug = manager.getLogs();
+        DebugLogger debug = manager.getLogs();
 
         PluginManager pl = Bukkit.getServer().getPluginManager();
 

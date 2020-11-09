@@ -2,10 +2,11 @@ package code.commands;
 
 import code.CacheManager;
 import code.modules.MsgToggleMethod;
+import code.modules.ReplyMethod;
 import code.modules.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.modules.player.PlayerMessage;
-import code.sounds.SoundManager;
+import code.bukkitutils.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -17,7 +18,6 @@ import code.utils.Configuration;
 import code.Manager;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,6 +54,13 @@ public class MsgCommand implements CommandClass{
         Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
+        if (!(manager.getPathManager().isCommandEnabled("msg"))){
+            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+                    .replace("%player%", player.getName())
+                    .replace("%command%", "msg"));
+            return true;
+        }
+
         if (target == null) {
             playersender.sendMessage(sender, messages.getString("error.no-arg"));
             playersender.sendMessage(sender, "&8- &fUsage: &a/msg [player] [message]");
@@ -61,6 +68,7 @@ public class MsgCommand implements CommandClass{
             return true;
         }
 
+        UUID targetuuid = target.getUniqueId();
 
         if (!(target.isOnline()) && (!(target.getName().equalsIgnoreCase("-toggle")))){
             playersender.sendMessage(sender, messages.getString("error.player-offline"));
@@ -81,11 +89,11 @@ public class MsgCommand implements CommandClass{
 
             if (msg == null){
 
-                if (!(msgtoggle.contains(player.getUniqueId()))){
-                    msgToggleMethod.set(player.getUniqueId());
+                if (!(msgtoggle.contains(playeruuid))){
+                    msgToggleMethod.set(playeruuid);
                     playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.activated"));
                 }else{
-                    msgToggleMethod.unset(player.getUniqueId());
+                    msgToggleMethod.unset(playeruuid);
                     playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.unactivated"));
                 }
 
@@ -115,7 +123,7 @@ public class MsgCommand implements CommandClass{
                 }else{
                     msgToggleMethod.unset(you.getUniqueId());
                     playersender.sendMessage(sender, command.getString("commands.msg-toggle.arg-1.unactivated")
-                            .replace("%arg-1%", you.getPlayer().getName()));
+                            .replace("%arg-1%", yousender.getName()));
                     playersender.sendMessage(yousender, command.getString("commands.msg-toggle.player.unactivated"));
                 }
                 sound.setSound(player.getUniqueId(), "sounds.on-togglepm");
@@ -152,7 +160,7 @@ public class MsgCommand implements CommandClass{
 
                 .replace("%player%", sender.getName())
                 .replace("%arg-1%", target.getName())
-                , true,  message);
+                , message, true);
         sound.setSound(player.getUniqueId(), "sounds.on-message");
 
         List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
@@ -161,7 +169,7 @@ public class MsgCommand implements CommandClass{
             playersender.sendMessage(target.getPlayer(), targetFormat
                             .replace("%player%", sender.getName())
                             .replace("%arg-1%", target.getName())
-                    , true, message);
+                    , message, true);
             sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-receive-msg");
 
         }
@@ -175,16 +183,16 @@ public class MsgCommand implements CommandClass{
             }
         }
 
-        Map<UUID, UUID> reply = cache.getReply();
+        ReplyMethod reply = manager.getPlayerMethods().getReplyMethod();
+        reply.setReply(playeruuid, targetuuid);
 
-        if (!(reply.containsKey(player.getUniqueId()))) {
-            reply.put(player.getUniqueId(), target.getUniqueId());
-            reply.put(target.getUniqueId(), player.getUniqueId());
-        } else {
-            reply.replace(player.getUniqueId(), target.getUniqueId());
-            reply.replace(target.getUniqueId(), player.getUniqueId());
-        }
 
-            return true;
+
+
+
+
+
+
+        return true;
         }
 }
