@@ -24,4 +24,13 @@ public class PathManager {
         }
         return false;
     }
+    public boolean isOptionEnabled(String optionName) {
+        List<String> optionFile = config.getStringList("config.modules.enabled-options");
+        for (String optionEnabledOptions : optionFile) {
+            if (optionEnabledOptions.equalsIgnoreCase(optionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

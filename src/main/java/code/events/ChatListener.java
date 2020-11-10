@@ -27,9 +27,6 @@ public class ChatListener implements Listener{
 
         String sender = event.getPlayer().getName();
 
-        if (event.getMessage().startsWith("test")){
-            Bukkit.dispatchCommand(event.getPlayer(), "help");
-        }
         if (!(players.contains("players"))) return;
 
 

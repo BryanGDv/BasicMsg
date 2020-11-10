@@ -10,6 +10,7 @@ import me.fixeddev.commandflow.annotated.annotation.Command;
 
 
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,13 +32,12 @@ public class IgnoreCommand implements CommandClass{
     }
 
     @Command(names = "ignore")
-    public boolean ignore(CommandSender sender, @OptArg OfflinePlayer target) {
+    public boolean ignore(@Sender Player player, @OptArg OfflinePlayer target) {
 
         ConfigManager files = manager.getFiles();
         IgnoreMethod ignore = manager.getPlayerMethods().getIgnoreMethod();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-
 
         SoundManager sound = manager.getSounds();
 
@@ -45,37 +45,33 @@ public class IgnoreCommand implements CommandClass{
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(sender instanceof Player)) {
-            System.out.println(playersender.getMessage(messages.getString("error.console")));
-            return true;
-        }
 
-        Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
         if (!(manager.getPathManager().isCommandEnabled("ignore"))){
-            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+            playersender.sendMessage(player, messages.getString("error.command-disabled")
                     .replace("%player%", player.getName())
                     .replace("%command%", "ignore"));
+            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
             return true;
         }
 
 
         if (target == null) {
-            playersender.sendMessage(sender, messages.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/ignore [player]");
+            playersender.sendMessage(player, messages.getString("error.no-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/ignore [player]");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
 
         if (!(target.isOnline()) && (!(target.getName().equals("-list")))) {
-            playersender.sendMessage(sender, messages.getString("error.player-offline"));
+            playersender.sendMessage(player, messages.getString("error.player-offline"));
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
 
         if (target.getName().equalsIgnoreCase(player.getName())) {
-            playersender.sendMessage(sender, messages.getString("error.ignore.ignore-yourself"));
+            playersender.sendMessage(player, messages.getString("error.ignore.ignore-yourself"));
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -110,18 +106,18 @@ public class IgnoreCommand implements CommandClass{
         if (ignorelist.containsKey(playeruuid)) {
 
             if (!(ignoredlist.contains(targetname))) {
-                ignore.set(sender, target.getUniqueId());
-                playersender.sendMessage(sender, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
+                ignore.set(player, target.getUniqueId());
+                playersender.sendMessage(player, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
                 sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-ignore");
             } else {
-                ignore.unset(sender, target.getUniqueId());
-                playersender.sendMessage(sender, command.getString("commands.ignore.player-unignored").replace("%player%", targetname));
+                ignore.unset(player, target.getUniqueId());
+                playersender.sendMessage(player, command.getString("commands.ignore.player-unignored").replace("%player%", targetname));
                 sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-unignore");
             }
             return true;
         }else{
-            ignore.set(sender, target.getUniqueId());
-            playersender.sendMessage(sender, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
+            ignore.set(player, target.getUniqueId());
+            playersender.sendMessage(player, command.getString("commands.ignore.player-ignored").replace("%player%", targetname));
             sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-ignore");
         }
         return true;

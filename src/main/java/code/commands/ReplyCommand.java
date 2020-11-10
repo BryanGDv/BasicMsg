@@ -10,6 +10,7 @@ import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.Text;
+import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -30,7 +31,7 @@ public class ReplyCommand implements CommandClass {
         this.cache = cache;
     }
     @Command(names = {"reply", "r"})
-    public boolean onCommand(CommandSender sender, @OptArg @Text String message) {
+    public boolean onCommand(@Sender Player player, @OptArg @Text String message) {
 
         ConfigManager files = manager.getFiles();
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
@@ -42,24 +43,19 @@ public class ReplyCommand implements CommandClass {
         Configuration command = files.getCommand();
         Configuration lang = files.getMessages();
 
-        if(!(sender instanceof Player)) {
-            System.out.println(playersender.getMessage(lang.getString("error.console")));
-            return true;
-        }
-
-        Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
         if (!(manager.getPathManager().isCommandEnabled("reply"))){
-            playersender.sendMessage(sender, lang.getString("error.command-disabled")
+            playersender.sendMessage(player, lang.getString("error.command-disabled")
                     .replace("%player%", player.getName())
                     .replace("%command%", "reply"));
+            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
             return true;
         }
 
         if (message.trim().isEmpty()) {
-            playersender.sendMessage(sender, lang.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/reply [message]");
+            playersender.sendMessage(player, lang.getString("error.no-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/reply [message]");
             sound.setSound(player.getUniqueId(), "sounds.error");
 
             return true;
@@ -81,12 +77,12 @@ public class ReplyCommand implements CommandClass {
 
             CommandSender targetsender = target.getPlayer();
 
-            if (sender.hasPermission(config.getString("config.perms.msg-color"))){
+            if (player.hasPermission(config.getString("config.perms.msg-color"))){
                 message = PlayerStatic.setColor(message);
             }
 
             playersender.sendMessage(player, PlayerStatic.setColor(command.getString ("commands.msg-reply.player")
-                    .replace("%player%", sender.getName())
+                    .replace("%player%", player.getName())
                     .replace("%arg-1%", target.getName()))
                     , message, true);
             sound.setSound(player.getUniqueId(), "sounds.on-reply");
@@ -95,7 +91,7 @@ public class ReplyCommand implements CommandClass {
 
             if (!(ignoredlist.contains(target.getName()))) {
                 playersender.sendMessage(targetsender, PlayerStatic.setColor(command.getString("commands.msg-reply.player")
-                                .replace("%player%", sender.getName())
+                                .replace("%player%", player.getName())
                                 .replace("%arg-1%", target.getName()))
                         , message, true);
                 reply.replace(reply.get(player.getUniqueId()), player.getUniqueId());
@@ -103,7 +99,7 @@ public class ReplyCommand implements CommandClass {
             }
 
         } else {
-            playersender.sendMessage(sender, lang.getString("error.no-reply"));
+            playersender.sendMessage(player, lang.getString("error.no-reply"));
             sound.setSound(player.getUniqueId(), "sounds.error");
 
         }

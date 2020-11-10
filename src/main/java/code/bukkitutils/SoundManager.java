@@ -35,7 +35,6 @@ public class SoundManager{
 
         String versionname = version.split("\\.")[3];
 
-        manager.getPlugin().getLogger().info(versionname);
         if (versionname.contains("8")) {
             debug.log("Using 1.8, enabling sounds. Version:" + versionname);
 

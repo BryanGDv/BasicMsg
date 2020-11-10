@@ -10,6 +10,7 @@ import code.bukkitutils.SoundManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -33,7 +34,7 @@ public class MsgCommand implements CommandClass{
 
     @Command(names = {"msg", "pm", "tell", "t", "w"})
 
-    public boolean onCommand(CommandSender sender, @OptArg OfflinePlayer target, @OptArg String msg) {
+    public boolean onCommand(@Sender Player player, @OptArg OfflinePlayer target, @OptArg String msg) {
 
         ConfigManager files = manager.getFiles();
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
@@ -46,24 +47,19 @@ public class MsgCommand implements CommandClass{
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(sender instanceof Player)) {
-            System.out.println(playersender.getMessage(messages.getString("error.console")));
-            return true;
-        }
-
-        Player player = (Player) sender;
         UUID playeruuid = player.getUniqueId();
 
-        if (!(manager.getPathManager().isCommandEnabled("msg"))){
-            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+        if (!(manager.getPathManager().isCommandEnabled("msg"))) {
+            playersender.sendMessage(player, messages.getString("error.command-disabled")
                     .replace("%player%", player.getName())
                     .replace("%command%", "msg"));
+            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
             return true;
         }
 
         if (target == null) {
-            playersender.sendMessage(sender, messages.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/msg [player] [message]");
+            playersender.sendMessage(player, messages.getString("error.no-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/msg [player] [message]");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -71,14 +67,14 @@ public class MsgCommand implements CommandClass{
         UUID targetuuid = target.getUniqueId();
 
         if (!(target.isOnline()) && (!(target.getName().equalsIgnoreCase("-toggle")))){
-            playersender.sendMessage(sender, messages.getString("error.player-offline"));
+            playersender.sendMessage(player, messages.getString("error.player-offline"));
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
 
-        if (target.getName().equalsIgnoreCase(sender.getName())) {
-            playersender.sendMessage(sender, messages.getString("error.same-player")
-                    .replace("%player%", sender.getName()));
+        if (target.getName().equalsIgnoreCase(player.getName())) {
+            playersender.sendMessage(player, messages.getString("error.same-player")
+                    .replace("%player%", player.getName()));
             sound.setSound(playeruuid, "sounds.error");
             return true;
 
@@ -91,24 +87,24 @@ public class MsgCommand implements CommandClass{
 
                 if (!(msgtoggle.contains(playeruuid))){
                     msgToggleMethod.set(playeruuid);
-                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.activated"));
+                    playersender.sendMessage(player, command.getString("commands.msg-toggle.player.activated"));
                 }else{
                     msgToggleMethod.unset(playeruuid);
-                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.player.unactivated"));
+                    playersender.sendMessage(player, command.getString("commands.msg-toggle.player.unactivated"));
                 }
 
             } else {
 
                 OfflinePlayer you = Bukkit.getPlayer(msg);
 
-                if (!(sender.hasPermission(config.getString("config.perms.toggle-admin")))){
-                    playersender.sendMessage(sender, messages.getString("error.no-perms"));
+                if (!(player.hasPermission(config.getString("config.perms.toggle-admin")))){
+                    playersender.sendMessage(player, messages.getString("error.no-perms"));
                     sound.setSound(playeruuid, "sounds.error");
                     return true;
                 }
 
                 if (you == null){
-                    playersender.sendMessage(sender, messages.getString("error.player-offline"));
+                    playersender.sendMessage(player, messages.getString("error.player-offline"));
                     sound.setSound(playeruuid, "sounds.error");
                     return true;
                 }
@@ -117,12 +113,12 @@ public class MsgCommand implements CommandClass{
 
                 if (!(msgtoggle.contains(you.getUniqueId()))){
                     msgToggleMethod.set(you.getUniqueId());
-                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.arg-1.activated")
+                    playersender.sendMessage(player, command.getString("commands.msg-toggle.arg-1.activated")
                             .replace("%arg-1%", yousender.getName()));
                     playersender.sendMessage(yousender, command.getString("commands.msg-toggle.player.activated"));
                 }else{
                     msgToggleMethod.unset(you.getUniqueId());
-                    playersender.sendMessage(sender, command.getString("commands.msg-toggle.arg-1.unactivated")
+                    playersender.sendMessage(player, command.getString("commands.msg-toggle.arg-1.unactivated")
                             .replace("%arg-1%", yousender.getName()));
                     playersender.sendMessage(yousender, command.getString("commands.msg-toggle.player.unactivated"));
                 }
@@ -132,15 +128,15 @@ public class MsgCommand implements CommandClass{
         }
 
         if (msgtoggle.contains(target.getUniqueId())){
-            playersender.sendMessage(sender, command.getString("commands.msg-toggle.msg")
+            playersender.sendMessage(player, command.getString("commands.msg-toggle.msg")
                     .replace("%player%",target.getName()));
             return true;
         }
 
 
         if (msg == null) {
-            playersender.sendMessage(sender, messages.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/msg [player] [message]");
+            playersender.sendMessage(player, messages.getString("error.no-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/msg [player] [message]");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -148,7 +144,7 @@ public class MsgCommand implements CommandClass{
 
         String message = String.join(" ", msg);
 
-        if (sender.hasPermission(config.getString("config.perms.msg-color"))) {
+        if (player.hasPermission(config.getString("config.perms.msg-color"))) {
             message = PlayerStatic.setColor(msg);
         }
 
@@ -158,7 +154,7 @@ public class MsgCommand implements CommandClass{
 
         playersender.sendMessage(player, playerFormat
 
-                .replace("%player%", sender.getName())
+                .replace("%player%", player.getName())
                 .replace("%arg-1%", target.getName())
                 , message, true);
         sound.setSound(player.getUniqueId(), "sounds.on-message");
@@ -167,7 +163,7 @@ public class MsgCommand implements CommandClass{
 
         if (!(ignoredlist.contains(target.getName()))){
             playersender.sendMessage(target.getPlayer(), targetFormat
-                            .replace("%player%", sender.getName())
+                            .replace("%player%", player.getName())
                             .replace("%arg-1%", target.getName())
                     , message, true);
             sound.setSound(target.getPlayer().getUniqueId(), "sounds.on-receive-msg");
@@ -176,7 +172,7 @@ public class MsgCommand implements CommandClass{
         for (Player watcher : Bukkit.getServer().getOnlinePlayers()) {
             if (cache.getSocialSpy().contains(watcher.getUniqueId())) {
                 playersender.sendMessage(watcher, command.getString ("commands.socialspy.spy")
-                        .replace("%player%", sender.getName())
+                        .replace("%player%", player.getName())
                         .replace("%arg-1%", target.getName())
                         .replace("%message%", message));
                 sound.setSound(watcher.getPlayer().getUniqueId(), "sounds.on-socialspy.receive-msg");

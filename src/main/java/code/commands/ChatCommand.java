@@ -10,6 +10,7 @@ import code.utils.VariableManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class ChatCommand implements CommandClass{
     }
 
     @Command(names = {"chat"})
-    public boolean help(CommandSender sender, @OptArg String args) {
+    public boolean help(@Sender Player player, @OptArg String args) {
 
         ConfigManager files = manager.getFiles();
 
@@ -40,22 +41,16 @@ public class ChatCommand implements CommandClass{
         Configuration messages = files.getMessages();
         Configuration utils = files.getBasicUtils();
 
-        if (!(sender instanceof Player)) {
-            System.out.println(playersender.getMessage(messages.getString("error.console")));
-            return true;
-        }
-
-        Player player = (Player) sender;
-
         if (!(manager.getPathManager().isCommandEnabled("chat"))){
-            playersender.sendMessage(sender, messages.getString("error.command-disabled")
+            playersender.sendMessage(player, messages.getString("error.command-disabled")
                     .replace("%player%", player.getName())
                     .replace("%command%", "chat"));
+            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
             return true;
         }
 
         if (!(utils.getBoolean("utils.chat.enabled"))){
-            playersender.sendMessage(sender, messages.getString("error.option-disabled")
+            playersender.sendMessage(player, messages.getString("error.option-disabled")
                         .replace("%player%", player.getName())
                         .replace("%option%", "ChatManagement"));
             return true;
@@ -64,29 +59,29 @@ public class ChatCommand implements CommandClass{
         UUID playeruuid = player.getUniqueId();
 
         if (args == null) {
-            playersender.sendMessage(sender, messages.getString("error.no-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/chat [help/reload]");
+            playersender.sendMessage(player, messages.getString("error.no-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/chat [help/reload]");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
 
         if (args.equalsIgnoreCase("help")){
-            variable.loopString(sender, command, "commands.chat.help");
+            variable.loopString(player, command, "commands.chat.help");
             return true;
 
         }else if (args.equalsIgnoreCase("reload")){
-            if (!(sender.hasPermission(config.getString("config.perms.chat-reload")))) {
-                playersender.sendMessage(sender, messages.getString("error.no-perms"));
+            if (!(player.hasPermission(config.getString("config.perms.chat-reload")))) {
+                playersender.sendMessage(player, messages.getString("error.no-perms"));
                 return true;
 
             }
-            playersender.sendMessage(sender, command.getString("commands.bmsg.load"));
-            this.getReloadEvent(sender);
+            playersender.sendMessage(player, command.getString("commands.bmsg.load"));
+            this.getReloadEvent(player);
             return true;
 
         }else{
-            playersender.sendMessage(sender, messages.getString("error.unknown-arg"));
-            playersender.sendMessage(sender, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
+            playersender.sendMessage(player, messages.getString("error.unknown-arg"));
+            playersender.sendMessage(player, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
             sound.setSound(player.getUniqueId(), "sounds.error");
         }
 

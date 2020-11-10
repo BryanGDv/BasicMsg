@@ -2,10 +2,12 @@ package code.events;
 
 import code.Manager;
 import code.bukkitutils.WorldManager;
+import code.modules.player.PlayerMessage;
 import code.modules.player.PlayerStatic;
 import code.revisor.RevisorManager;
 import code.utils.Configuration;
 import code.utils.HoverManager;
+import code.utils.PathManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -37,6 +39,10 @@ public class ChatFormat implements Listener{
         Configuration config = manager.getFiles().getConfig();
         Configuration utils = manager.getFiles().getBasicUtils();
 
+        if (!(manager.getPathManager().isOptionEnabled("chat_format"))){
+            return;
+
+        }
         if (!(utils.getBoolean("utils.chat.enabled"))){
             return;
         }
@@ -83,7 +89,6 @@ public class ChatFormat implements Listener{
                         event.getRecipients().addAll(world.getPlayers());
                     }
                 }
-
 
             }else{
                 for (String worldname : WorldManager.getWorldChat(player.getWorld().getName())) {

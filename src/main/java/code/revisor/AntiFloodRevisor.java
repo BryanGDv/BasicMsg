@@ -21,18 +21,15 @@ public class AntiFloodRevisor {
         this.manager = manager;
         plugin = manager.getPlugin();
         utils = manager.getFiles().getBasicUtils();
-        minflood = utils.getInt("utils.chat.security.anti-flood.min-chars");
+        minflood = Math.max(0, utils.getInt("utils.chat.security.anti-flood.min-chars"));
     }
 
     public static String revisor(String string){
-        Bukkit.getLogger().info("Util:" + utils.getInt("utils.chat.security.anti-flood.min-chars"));
-        Bukkit.getLogger().info("Util boolean:" + utils.getBoolean("utils.chat.security.anti-flood.enabled"));
 
         if (!(utils.getBoolean("utils.chat.security.anti-flood.enabled"))){
             return string;
         }
 
-        minflood = Math.max(0, minflood);
         String stringflooded = string;
 
         for (char letter : LETTERS.toCharArray()){
