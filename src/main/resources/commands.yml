@@ -27,9 +27,13 @@ commands:
   bmsg:
     help:
       - "%c &fPlugin help 1/1"
+      - "&f/bmsg [reload/help/debug] [all/<file>] &8: &fTo reload the plugin."
+      - "&f/chat reload &8: &fTo reload the chat."
       - "&f/msg [<player>] [<message>] &8: &fTo send a private message."
       - "&f/reply [<message>] &8: &fTo reply."
-      - "&f/bmsg reload &8: &fTo reload the plugin."
+      - "&f/socialspy [on/off] [<player>]: &fTo activate the socialspy."
+      - "&f/ignore [<player>] &8: &fTo ignore a player"
+      - "&f/unignore [<player>] &8: &fTo unignore a player."
     load: "%c &fReloading plugin..."
     load-file: "%c &fReloading file.."
     reload: "%c &fPlugin reloaded!"

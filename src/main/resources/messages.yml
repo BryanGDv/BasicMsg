@@ -1,10 +1,10 @@
 # Messages:
 error:
-  console: "%c &fYou can't use this command in the consolpe."
+  console: "You can't use this command in the console."
   player-offline: "%c &fThat player is not online."
   same-player: "%c &fYou cant talk to yourself."
   no-arg: "%c &fUnknown argument"
-  command-disabled: "%c &fSrry &a%player&f, the command &a%command% is disabled :(."
+  command-disabled: "%c &fSrry &a%player%&f, the command &a%command% &fis disabled :(."
   option-disabled: "%c &fSrry &a%player%&f,the option &a%option% &fis disabled :(."
   unknown-arg: "%c &fUnknown args."
   no-perms: "%c &fYou don't have permission to do this."

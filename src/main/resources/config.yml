@@ -23,6 +23,9 @@ config:
       - socialspy
       - ignore
       - unignore
+    enabled-options:
+      - chat_format
+      - chat_revisor
 
   perms:
     msg-color: bmsg.msg.color
