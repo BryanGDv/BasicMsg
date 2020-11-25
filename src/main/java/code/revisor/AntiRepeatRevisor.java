@@ -3,6 +3,7 @@ package code.revisor;
 import code.BasicMsg;
 import code.CacheManager;
 import code.Manager;
+import code.cache.UserCache;
 import code.modules.player.PlayerMessage;
 import code.utils.Configuration;
 
@@ -35,21 +36,25 @@ public class AntiRepeatRevisor {
 
     public static boolean isSpamming(UUID uuid){
 
-        Set<UUID> playercooldown = cache.getPlayercooldown();
+        if (!(utils.getBoolean("utils.chat.security.anti-repeat.enabled"))){
+            return false;
+        }
 
-        if (playercooldown.contains(uuid)) {
+        UserCache playerCooldown = cache.getPlayerUUID().get(uuid);
+
+        if (playerCooldown.isCooldownMode()) {
             Player player = Bukkit.getPlayer(uuid);
             playersender.sendMessage(player, utils.getString("utils.chat.security.anti-repeat.message")
                     .replace("%seconds%", utils.getString("utils.chat.security.anti-repeat.seconds")));
             return true;
         }
 
-        playercooldown.add(uuid);
+        playerCooldown.setCooldownMode(true);
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             @Override
             public void run() {
-                playercooldown.remove(uuid);
+                playerCooldown.setCooldownMode(false);
             }
         },20L * utils.getInt("utils.chat.security.anti-repeat.seconds"));
 

@@ -2,10 +2,12 @@ package code.commands;
 
 import code.BasicMsg;
 import code.Manager;
+import code.cache.UserCache;
 import code.modules.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
+import code.utils.PathManager;
 import code.utils.VariableManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
@@ -15,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ChatCommand implements CommandClass{
@@ -33,7 +36,10 @@ public class ChatCommand implements CommandClass{
         ConfigManager files = manager.getFiles();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-        SoundManager sound = manager.getSounds();
+
+        SoundManager sound = manager.getManagingCenter().getSoundManager();
+        PathManager pathManager = manager.getPathManager();
+
         VariableManager variable = manager.getVariables();
 
         Configuration config = files.getConfig();
@@ -41,11 +47,9 @@ public class ChatCommand implements CommandClass{
         Configuration messages = files.getMessages();
         Configuration utils = files.getBasicUtils();
 
-        if (!(manager.getPathManager().isCommandEnabled("chat"))){
-            playersender.sendMessage(player, messages.getString("error.command-disabled")
-                    .replace("%player%", player.getName())
-                    .replace("%command%", "chat"));
-            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
+
+        if (!(pathManager.isCommandEnabled("chat"))) {
+            pathManager.sendDisabledCmdMessage(player, "chat");
             return true;
         }
 
@@ -60,7 +64,7 @@ public class ChatCommand implements CommandClass{
 
         if (args == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/chat [help/reload]");
+            pathManager.getUsage(player, "chat", "help, reload");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -81,7 +85,7 @@ public class ChatCommand implements CommandClass{
 
         }else{
             playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
+            pathManager.getUsage(player, "chat", "help, reload");
             sound.setSound(player.getUniqueId(), "sounds.error");
         }
 

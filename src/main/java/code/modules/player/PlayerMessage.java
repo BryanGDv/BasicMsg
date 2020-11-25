@@ -20,13 +20,25 @@ public class PlayerMessage{
 
     public void sendMessage(CommandSender sender, String path, String message, Boolean revisor) {
 
+        Player player = (Player) sender;
+
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             if (PlaceholderAPI.containsPlaceholders(path)) {
                 path = getPlaceholders(sender, path);
             }
         }
-        Player player = (Player) sender;
-        sender.sendMessage(getMessage(path, player.getUniqueId(), revisor).replace("%message%", message));
+
+        if (revisor){
+            message = RevisorManager.revisor(player.getUniqueId(), message);
+
+            if (message == null){
+                return;
+            }
+
+        }
+
+
+        sender.sendMessage(getMessage(path).replace("%message%", message));
     }
 
 
@@ -46,17 +58,6 @@ public class PlayerMessage{
         return PlayerStatic.setColor(message);
     }
 
-    public String getMessage(String message, UUID uuid, Boolean revisor) {
-
-        message = manager.getVariables().replaceString(message);
-
-        if (revisor) {
-            manager.getPlugin().getLogger().info("Loading Revisor..");
-            return RevisorManager.revisor(uuid, message);
-        }
-
-        return message;
-    }
     private String getPlaceholders(CommandSender sender, String path){
 
         Player player = (Player) sender;

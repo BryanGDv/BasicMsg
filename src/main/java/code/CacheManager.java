@@ -1,5 +1,6 @@
 package code;
 
+import code.cache.UserCache;
 import code.debug.DebugLogger;
 import code.utils.Configuration;
 
@@ -9,14 +10,9 @@ import java.util.*;
 public class CacheManager{
 
     private final Map<UUID, List<String>> ignoreCache = new HashMap<>();
-    private final Map<UUID, UUID> replyCache = new HashMap<>();
     private final Map<String, Configuration> config = new HashMap<>();
 
-
-    private final Set<UUID> playercooldown = new HashSet<>();
-    private final Set<UUID> socialSpyCache = new HashSet<>();
-    private final Set<UUID> msgtoggleCache = new HashSet<>();
-    private final Set<UUID> playerSounds = new HashSet<>();
+    private final Map<UUID, UserCache> playeruuid = new HashMap<>();
 
     private final Manager manager;
 
@@ -24,12 +20,13 @@ public class CacheManager{
     public CacheManager(Manager manager){
         this.manager = manager;
         DebugLogger debug = manager.getLogs();
-        debug.log("IgnoreCache loaded");
-        debug.log("ReplyCache loaded!");
-        debug.log("SocialspyCache loaded!");
+        debug.log("Configuration loaded!");
+        debug.log("Playeruuid loaded!");
+
+
     }
-    public Set<UUID> getPlayercooldown(){
-        return playercooldown;
+    public Map<UUID, UserCache> getPlayerUUID() {
+        return playeruuid;
     }
 
     public Map<UUID, List<String>> getIgnorelist(){
@@ -40,19 +37,4 @@ public class CacheManager{
         return config;
     }
 
-    public Map<UUID, UUID> getReply(){
-        return replyCache;
-    }
-
-    public Set<UUID> getSocialSpy(){
-        return socialSpyCache;
-    }
-
-    public Set<UUID> getMsgToggle(){
-        return msgtoggleCache;
-    }
-
-    public Set<UUID> getPlayerSounds(){
-        return playerSounds;
-    }
 }

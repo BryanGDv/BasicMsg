@@ -18,6 +18,7 @@ public class BasicMsg extends JavaPlugin {
 
         registerManaging();
         registerPlaceholders();
+        recoverStats();
 
         getLogger().info("Plugin created by "+getDescription().getAuthors() + "");
         getLogger().info("You are using version " + getDescription().getVersion() + ".");
@@ -51,6 +52,15 @@ public class BasicMsg extends JavaPlugin {
         }
 
     }
+
+    public void recoverStats(){
+        if (Bukkit.getServer().getOnlinePlayers().size() > 0){
+            basicMsg.getLogs().log("The plugin was reloaded with /reload", 1);
+            getLogger().info("Please don't use /reload to reload plugin, it can cause serious errors!");
+            RecoverStats recoverStats = new RecoverStats(basicMsg);
+        }
+    }
+
     public Manager getManager(){
         return basicMsg;
     }

@@ -5,6 +5,7 @@ import code.modules.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.modules.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
+import code.utils.PathManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 
@@ -16,7 +17,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import code.utils.Configuration;
 import code.Manager;
+import sun.misc.Cache;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,7 +42,8 @@ public class IgnoreCommand implements CommandClass{
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
-        SoundManager sound = manager.getSounds();
+        SoundManager sound = manager.getManagingCenter().getSoundManager();
+        PathManager pathManager = manager.getPathManager();
 
         Configuration players = files.getPlayers();
         Configuration command = files.getCommand();
@@ -48,18 +52,15 @@ public class IgnoreCommand implements CommandClass{
 
         UUID playeruuid = player.getUniqueId();
 
-        if (!(manager.getPathManager().isCommandEnabled("ignore"))){
-            playersender.sendMessage(player, messages.getString("error.command-disabled")
-                    .replace("%player%", player.getName())
-                    .replace("%command%", "ignore"));
-            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
+        if (!(pathManager.isCommandEnabled("ignore"))) {
+            pathManager.sendDisabledCmdMessage(player, "ignore");
             return true;
         }
 
 
         if (target == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/ignore [player]");
+            pathManager.getUsage(player, "ignore", "<player>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }

@@ -1,5 +1,6 @@
 package code;
 
+import code.bukkitutils.ManagingCenter;
 import code.bukkitutils.WorldManager;
 import code.debug.DebugLogger;
 import code.modules.MethodManager;
@@ -8,6 +9,7 @@ import code.registry.ConfigManager;
 import code.registry.EventManager;
 import code.revisor.RevisorManager;
 import code.bukkitutils.SoundManager;
+import code.utils.ListManager;
 import code.utils.PathManager;
 import code.utils.VariableManager;
 
@@ -22,6 +24,9 @@ public class Manager {
     private MethodManager methodManager;
 
     private DebugLogger debug;
+
+
+    private ListManager listManager;
     private PathManager pathmanager;
 
     private CommandRegistry commandRegistry;
@@ -29,9 +34,7 @@ public class Manager {
     private ConfigManager configManager;
 
     private RevisorManager revisorManager;
-
-    private SoundManager soundManager;
-    private WorldManager worldManager;
+    private ManagingCenter managingCenter;
 
     private CacheManager cache;
 
@@ -50,12 +53,11 @@ public class Manager {
         configManager = new ConfigManager(plugin, this);
         configManager.setup();
 
+        listManager = new ListManager(this);
+
         pathmanager = new PathManager(this);
 
-        worldManager = new WorldManager(this);
-
-        soundManager = new SoundManager(this);
-        soundManager.setup();
+        managingCenter = new ManagingCenter(this);
 
         variables = new VariableManager(configManager, this);
 
@@ -71,13 +73,14 @@ public class Manager {
         revisorManager = new RevisorManager(this);
 
     }
-    public WorldManager getWorldManager(){
-        return worldManager;
-    }
-    public RevisorManager getRevisorManager() {
-        return revisorManager;
+
+    public ManagingCenter getManagingCenter() {
+        return managingCenter;
     }
 
+    public ListManager getListManager(){
+        return listManager;
+    }
     public PathManager getPathManager(){
         return pathmanager;
     }
@@ -101,9 +104,6 @@ public class Manager {
         return configManager;
     }
 
-    public SoundManager getSounds(){
-        return soundManager;
-    }
     public BasicMsg getPlugin(){
         return plugin;
     }

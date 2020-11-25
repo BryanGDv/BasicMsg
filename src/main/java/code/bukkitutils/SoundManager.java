@@ -2,6 +2,7 @@ package code.bukkitutils;
 
 import code.CacheManager;
 import code.Manager;
+import code.cache.UserCache;
 import code.debug.DebugLogger;
 import code.modules.player.PlayerMessage;
 import code.utils.Configuration;
@@ -58,7 +59,8 @@ public class SoundManager{
             return;
         }
 
-        if (!(cache.getPlayerSounds().contains(target))){
+        UserCache playerMsgToggle = manager.getCache().getPlayerUUID().get(target);
+        if (!(playerMsgToggle.isPlayersoundMode())){
             return;
         }
 
@@ -70,13 +72,19 @@ public class SoundManager{
             }
         }
 
+        if (subpath.equalsIgnoreCase("on-helpop")) {
+            if (!(sound.getBoolean("sounds.on-helpop.enabled-all"))) {
+                return;
+            }
+        }
+
         Sound soundType = getSound(path + ".sound");
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
         Configuration messages = manager.getFiles().getMessages();
 
         if (soundType == null) {
-            playersender.sendMessage(player.getPlayer(), messages.getString("error.sound.null"));
+            playersender.sendMessage(player.getPlayer(), messages.getString("error.sound.no-exists"));
             return;
         }
 

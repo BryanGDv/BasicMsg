@@ -2,18 +2,15 @@ package code.events;
 
 import code.CacheManager;
 import code.Manager;
+import code.cache.UserCache;
+import code.modules.ListenerManaging;
 import code.modules.player.PlayerMessage;
 import code.utils.Configuration;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import code.utils.PathManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 public class QuitListener implements Listener{
 
@@ -29,38 +26,39 @@ public class QuitListener implements Listener{
         PlayerMessage player = manager.getPlayerMethods().getSender();
         Configuration command = manager.getFiles().getCommand();
 
-        Map<UUID, UUID> reply = cache.getReply();
-        Set<UUID> socialspy  = cache.getSocialSpy();
-        Set<UUID> msgtoggle = cache.getMsgToggle();
-        Set<UUID> playersound = cache.getPlayerSounds();
+        PathManager pathManager = manager.getPathManager();
+        ListenerManaging listenerManaging = manager.getPlayerMethods().getListenerManaging();
+
 
         Player you = event.getPlayer();
+        UserCache playerStatus = manager.getCache().getPlayerUUID().get(you.getUniqueId());
 
-        if (reply.containsKey(you.getUniqueId())) {
-            OfflinePlayer target = Bukkit.getPlayer(reply.get(you.getUniqueId()));
+        if (pathManager.isOptionEnabled("join_quit")){
+            listenerManaging.setQuit(event);
+        }
 
-            if (target != null) {
-                if (reply.containsValue(you.getUniqueId())) {
-                    reply.remove(target.getUniqueId());
+        if (pathManager.isCommandEnabled("reply")) {
+            if (playerStatus.hasRepliedPlayer()){
+
+                UserCache target = manager.getCache().getPlayerUUID().get(playerStatus.getRepliedPlayer());
+
+                if (target.hasRepliedPlayer()) {
+
+                    if (target.hasRepliedPlayer(you.getUniqueId())) {
+                        target.setRepliedPlayer(null);
+                    }
+
                     player.sendMessage(target.getPlayer(), command.getString("commands.msg-toggle.left")
-                            .replace("%player%", target.getName())
-                            .replace("%arg-1%", event.getPlayer().getName()));
+                            .replace("%player%", target.getPlayer().getName())
+                            .replace("%arg-1%", event.getPlayer().getName())); }
 
-                }
+
 
             }
-            reply.remove(you.getUniqueId());
 
         }
-        if (socialspy.contains(you.getUniqueId())) {
-            socialspy.remove(you.getUniqueId());
-        }
-        if (msgtoggle.contains(you.getUniqueId())){
-            msgtoggle.remove(you.getUniqueId());
-        }
-        if (playersound.contains(you.getUniqueId())){
-            playersound.remove(you.getUniqueId());
-        }
+
+        playerStatus.resetStats();
 
     }
 

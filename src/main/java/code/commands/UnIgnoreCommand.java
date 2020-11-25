@@ -8,6 +8,7 @@ import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
 import code.modules.player.PlayerMessage;
 
+import code.utils.PathManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -38,23 +39,21 @@ public class UnIgnoreCommand implements CommandClass{
         IgnoreMethod ignore = manager.getPlayerMethods().getIgnoreMethod();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-        SoundManager sound = manager.getSounds();
+        PathManager pathManager = manager.getPathManager();
+        SoundManager sound = manager.getManagingCenter().getSoundManager();
 
         Configuration players = files.getPlayers();
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(manager.getPathManager().isCommandEnabled("unignore"))){
-            playersender.sendMessage(player, messages.getString("error.command-disabled")
-                    .replace("%player%", player.getName())
-                    .replace("%command%", "unignore"));
-            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
+        if (!(pathManager.isCommandEnabled("unignore"))) {
+            pathManager.sendDisabledCmdMessage(player, "unignore");
             return true;
         }
 
         if (target == null){
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            sound.setSound(player.getUniqueId(), "sounds.error");
+            pathManager.getUsage(player, "unignore", "<player>");
             return true;
         }
         if (!(target.isOnline())){

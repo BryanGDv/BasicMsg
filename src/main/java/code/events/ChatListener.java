@@ -1,6 +1,8 @@
 package code.events;
 
+import code.Manager;
 import code.registry.ConfigManager;
+import code.utils.PathManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,27 +17,33 @@ import java.util.UUID;
 public class ChatListener implements Listener{
 
 
-    private final ConfigManager manager;
+    private final Manager manager;
 
-    public ChatListener (ConfigManager manager){
+    public ChatListener (Manager manager){
         this.manager = manager;
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        Configuration players = manager.getPlayers();
+
+        Configuration players = manager.getFiles().getPlayers();
+        PathManager pathManager = manager.getPathManager();
 
         String sender = event.getPlayer().getName();
 
-        if (!(players.contains("players"))) return;
 
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers() ){
-            List<String> ignorelist = players.getStringList("players." + player.getUniqueId().toString() + ".players-ignored");
+        if (pathManager.isCommandEnabled("ignore")) {
 
-            if (ignorelist.contains(sender)){
+            if (!(players.contains("players"))) return;
 
-                event.getRecipients().remove(player);
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                List<String> ignorelist = players.getStringList("players." + player.getUniqueId().toString() + ".players-ignored");
+
+                if (ignorelist.contains(sender)) {
+
+                    event.getRecipients().remove(player);
+                }
             }
         }
 

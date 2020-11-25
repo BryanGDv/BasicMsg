@@ -2,6 +2,7 @@ package code.api;
 
 import code.CacheManager;
 import code.Manager;
+import code.cache.UserCache;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -10,7 +11,10 @@ import java.util.*;
 public class BasicAPI{
 
     private final Manager manager;
+
     private final CacheManager cache;
+
+    private final Map<UUID, UserCache> userCacheMap;
 
 
     private final String pluginname = "BasicMsg";
@@ -21,6 +25,7 @@ public class BasicAPI{
     public BasicAPI(Manager manager){
         this.manager = manager;
         this.cache = manager.getCache();
+        this.userCacheMap = manager.getCache().getPlayerUUID();
     }
 
     public boolean isPlayerIgnored(UUID targetuuid, UUID playerignored){
@@ -51,16 +56,32 @@ public class BasicAPI{
         return cache.getIgnorelist().get(uuid);
     }
 
-    public Set<UUID> getSpyList(){
-        return cache.getSocialSpy();
+    public List<String> getSpyList(){
+        List<String> socialspyList = new ArrayList<>();
+
+        for (UserCache cache : userCacheMap.values()) {
+            if (cache.isSocialSpyMode()) {
+                socialspyList.add(cache.getPlayer().getName());
+            }
+        }
+        return socialspyList;
+
     }
 
-    public Set<UUID> getMsgToggleList(){
-        return cache.getMsgToggle();
+    public List<String> getMsgToggleList(){
+        List<String> msgToggle = new ArrayList<>();
+
+        for (UserCache cache : userCacheMap.values()) {
+            if (cache.isMsgtoggleMode()) {
+                msgToggle.add(cache.getPlayer().getName());
+            }
+        }
+
+        return msgToggle;
     }
 
     public UUID getRepliedPlayer(UUID uuid){
-        return cache.getReply().get(uuid);
+        return userCacheMap.get(uuid).getRepliedPlayer();
     }
 
     public String getDescription(){

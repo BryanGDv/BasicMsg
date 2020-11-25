@@ -1,28 +1,31 @@
 package code.commands;
 
-import code.CacheManager;
-import code.modules.PlayerSoundMethod;
+import code.cache.UserCache;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
+
+import code.utils.ListManager;
+import code.utils.PathManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import code.BasicMsg;
 import code.utils.Configuration;
 import code.utils.VariableManager;
 
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 public class BmsgCommand implements CommandClass {
 
@@ -41,10 +44,9 @@ public class BmsgCommand implements CommandClass {
         VariableManager variable = manager.getVariables();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-        PlayerSoundMethod playersound = manager.getPlayerMethods().getPlayerSoundMethod();
 
-        SoundManager sound = manager.getSounds();
-        CacheManager cache = manager.getCache();
+        SoundManager sound = manager.getManagingCenter().getSoundManager();
+        PathManager pathManager = manager.getPathManager();
 
         Configuration soundfile = files.getSounds();
         Configuration utils = files.getBasicUtils();
@@ -53,22 +55,40 @@ public class BmsgCommand implements CommandClass {
         Configuration messages = files.getMessages();
 
 
-        if (!(manager.getPathManager().isCommandEnabled("bmsg"))){
-            playersender.sendMessage(player, messages.getString("error.command-disabled")
-                    .replace("%player%", player.getName())
-                    .replace("%command%", "bmsg"));
-            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
+        if (!(pathManager.isCommandEnabled("bmsg"))) {
+            pathManager.sendDisabledCmdMessage(player, "bmsg");
             return true;
         }
 
         if (arg1 == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/bmsg [help/reload/sounds/debug]");
+            pathManager.getUsage(player, "bmsg", "help, reload, commands, support, sounds, debug, restore");
             sound.setSound(player.getUniqueId(), "sounds.error");
             return true;
         }
-        if (arg1.equalsIgnoreCase("help")) {
-            variable.loopString(player, command, "commands.bmsg.help");
+        if (arg1.equalsIgnoreCase("help")){
+            variable.loopString(player, command, "commands.bmsg.help.pages");
+            return true;
+        }
+        if (arg1.equalsIgnoreCase("commands")) {
+            if (arg2 == null) {
+                playersender.sendMessage(player, command.getString("commands.bmsg.commands.format")
+                        .replace("%page%", "1")
+                        .replace("%max_page%", String.valueOf(getMaxPage())));
+                variable.loopString(player, command, "commands.bmsg.commands.pages.1");
+                return true;
+            }
+
+            if (!(getHelp().contains(arg2))){
+                playersender.sendMessage(player, messages.getString("error.unknown-page"));
+                return true;
+            }
+
+
+            playersender.sendMessage(player, command.getString("commands.bmsg.commands.format")
+                    .replace("%page%", arg2)
+                    .replace("%max_page%", String.valueOf(getMaxPage())));
+            variable.loopString(player, command, "commands.bmsg.commands.pages." + arg2);
             return true;
 
         }if (arg1.equalsIgnoreCase("reload")) {
@@ -78,7 +98,7 @@ public class BmsgCommand implements CommandClass {
             }
             if (arg2 == null) {
                 playersender.sendMessage(player, messages.getString("error.no-arg"));
-                playersender.sendMessage(player, "&8- &fUsage: &a/bmsg reload [file/all]");
+                pathManager.getUsage(player, "bmsg", arg1, "all, <file>");
                 sound.setSound(player.getUniqueId(), "sounds.error");
                 return true;
 
@@ -101,23 +121,23 @@ public class BmsgCommand implements CommandClass {
 
             } else {
                 playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-                playersender.sendMessage(player, "&8- &fUsage: &a/bmsg [help/reload]");
+                pathManager.getUsage(player, "bmsg", "help, reload, commands, support, sounds, debug, restore");
                 sound.setSound(player.getUniqueId(), "sounds.error");
             }
             return true;
 
         } if (arg1.equalsIgnoreCase("sounds")) {
-            Set<UUID> sounds = cache.getPlayerSounds();
+            UserCache playerSound = manager.getCache().getPlayerUUID().get(player.getUniqueId());
             if (!(soundfile.getBoolean("sounds.enabled-all"))) {
                 playersender.sendMessage(player, messages.getString("error.no-sound"));
                 return true;
             }
-            if (!(sounds.contains(player.getUniqueId()))) {
-                playersound.set(player.getUniqueId());
+            if (playerSound.isPlayersoundMode()){
+                playerSound.setPlayersoundMode(true);
                 playersender.sendMessage(player, command.getString("commands.bmsg.sounds.enabled"));
                 sound.setSound(player.getUniqueId(), "sounds.enable-mode");
             } else {
-                playersound.unset(player.getUniqueId());
+                playerSound.setPlayersoundMode(false);
                 playersender.sendMessage(player, command.getString("commands.bmsg.sounds.disabled"));
             }
 
@@ -129,22 +149,23 @@ public class BmsgCommand implements CommandClass {
 
             if (arg2 == null){
                 playersender.sendMessage(player, messages.getString("error.no-arg"));
-                playersender.sendMessage(player, "&8- &a/bmsg debug [pwc]");
+                pathManager.getUsage(player, "bmsg", arg1, "<group-pwc>");
                 sound.setSound(player.getUniqueId(), "sounds.error");
                 return true;
             }
 
-            if (arg2.equalsIgnoreCase("pwc")){
+            if (arg2.equalsIgnoreCase("pwc")) {
                 Set<String> worldlist = utils.getConfigurationSection("utils.chat.per-world-chat.worlds").getKeys(true);
 
-                if (arg3 == null){
+                if (arg3 == null) {
                     playersender.sendMessage(player, messages.getString("error.no-arg"));
-                    playersender.sendMessage(player, "&8- &fWorlds: "+ String.join(" ", worldlist));
+                    playersender.sendMessage(player, "&8- &fWorlds: " + String.join(" ", worldlist));
                     sound.setSound(player.getUniqueId(), "sounds.error");
                     return true;
+                }
 
-                }if (arg3.equalsIgnoreCase("-all")){
-                    playersender.sendMessage(player, command.getString("commands.bmsg.debug.list-worlds"));
+                if (arg3.equalsIgnoreCase("-all")) {
+                    playersender.sendMessage(player, command.getString("commands.bmsg.debug.list.worlds"));
                     for (String worldname : worldlist) {
                         playersender.sendMessage(player, "&8- &f " + worldname);
                     }
@@ -153,7 +174,7 @@ public class BmsgCommand implements CommandClass {
                 }
 
                 List<String> worldname = utils.getStringList("utils.chat.per-world-chat.worlds." + arg3);
-                if (worldname == null){
+                if (worldname == null) {
                     playersender.sendMessage(player, command.getString("error.debug.unknown-world"
                             .replace("%world%", arg3)));
                     sound.setSound(player.getUniqueId(), "sounds.error");
@@ -165,14 +186,61 @@ public class BmsgCommand implements CommandClass {
                     playersender.sendMessage(player, "&8- &f" + worldnamelist);
                 }
                 return true;
+            } if (arg2.equalsIgnoreCase("commands")) {
+                playersender.sendMessage(player, command.getString("commands.bmsg.debug.list.commands"));
+                for (String commandName : manager.getListManager().getCommands()){
+                    if (manager.getPathManager().isCommandEnabled(commandName)){
+                        playersender.sendMessage(player, "&8- &f" + commandName + " &a[Enabled]");
+                    }else{
+                        playersender.sendMessage(player, "&8- &f" + commandName + " &c[Disabled]");
+                    }
+                }
+                return true;
+            } if (arg2.equalsIgnoreCase("modules")){
+                playersender.sendMessage(player, command.getString("commands.bmsg.debug.list.modules"));
+                for (String moduleName : manager.getListManager().getModules()){
+                    if (manager.getPathManager().isOptionEnabled(moduleName)){
+                        playersender.sendMessage(player, "&8- &f" + moduleName + " &a[Enabled]");
+                    }else{
+                        playersender.sendMessage(player, "&8- &f" + moduleName + " &c[Disabled]");
+                    }
+                }
+
             }else{
                 playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-                playersender.sendMessage(player, "&8- &f/bmsg debug [pwc]");
+                pathManager.getUsage(player, "bmsg", arg1, "commands, modules");
+                sound.setSound(player.getUniqueId(), "sounds.error");
+                return true;
+            }
+        }if (arg1.equalsIgnoreCase("restore")){
+            if (arg2 == null){
+                playersender.sendMessage(player, messages.getString("error.no-arg"));
+                pathManager.getUsage(player, "bmsg", arg1, "commands, modules");
+                sound.setSound(player.getUniqueId(), "sounds.error");
+                return true;
+            }
+            ListManager listManager = manager.getListManager();
+            if (arg2.equalsIgnoreCase("commands")){
+                config.set("config.modules.enabled-commands", listManager.getCommands());
+                config.save();
+                playersender.sendMessage(player, command.getString("commands.bmsg.restore.commands"));
+                return true;
+
+            }if (arg2.equalsIgnoreCase("modules")){
+                config.set("config.modules.enabled-options", listManager.getModules());
+                config.save();
+                playersender.sendMessage(player, command.getString("commands.bmsg.restore.commands"));
+                return true;
+
+            }else{
+                playersender.sendMessage(player, messages.getString("error.unknown-arg"));
+                pathManager.getUsage(player, "bmsg", arg1, "commands, modules");
                 sound.setSound(player.getUniqueId(), "sounds.error");
             }
-        } else {
+            return true;
+        }else{
             playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/bmsg [help/reload/sounds]");
+            pathManager.getUsage(player, "bmsg", "help, reload, commands, support, sounds, debug, restore");
             sound.setSound(player.getUniqueId(), "sounds.error");
         }
         return true;
@@ -187,7 +255,7 @@ public class BmsgCommand implements CommandClass {
                 Player player = (Player) sender;
 
                 ConfigManager files = manager.getFiles();
-                SoundManager sound = manager.getSounds();
+                SoundManager sound = manager.getManagingCenter().getSoundManager();
 
                 Map<String, Configuration> fileMap = manager.getCache().getConfigFiles();
 
@@ -213,4 +281,14 @@ public class BmsgCommand implements CommandClass {
         }, 20L * 3);
     }
 
+    public Integer getMaxPage() {
+        List<String> maxpages = new ArrayList<>(getHelp());
+
+        return maxpages.size();
+    }
+
+    public Set<String> getHelp(){
+         Configuration commands = manager.getFiles().getCommand();
+         return commands.getConfigurationSection("commands.bmsg.commands.pages").getKeys(true);
+    }
 }

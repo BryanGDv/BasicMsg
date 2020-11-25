@@ -2,8 +2,10 @@ package code.events;
 
 import code.CacheManager;
 import code.Manager;
+import code.cache.UserCache;
+import code.modules.ListenerManaging;
 import code.utils.Configuration;
-import org.bukkit.Bukkit;
+import code.utils.PathManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,15 +37,30 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        Map<UUID, List<String>> ignorelist = cache.getIgnorelist();
-        List<String> playerlist = players.getStringList("players." + player.getUniqueId().toString() + ".players-ignored");
+        ListenerManaging listenerManaging = manager.getPlayerMethods().getListenerManaging();
 
-        if (!ignorelist.containsKey(uuid) && (!(playerlist.isEmpty()))){
-            ignorelist.put(uuid, playerlist);
+        Configuration config = manager.getFiles().getConfig();
+        PathManager pathManager = manager.getPathManager();
+
+        if (pathManager.isOptionEnabled("join_quit")){
+            listenerManaging.setJoin(event);
         }
 
-        if (sounds.getBoolean("sounds.enabled-all")){
-            cache.getPlayerSounds().add(event.getPlayer().getUniqueId());
+        if (cache.getPlayerUUID().get(uuid) == null){
+            cache.getPlayerUUID().put(uuid, new UserCache(uuid));
+        }
+
+        if (player.hasPermission(config.getString("config.perms.helpop-watch"))){
+            cache.getPlayerUUID().get(uuid).toggleHelpOp(true);
+        }
+
+        if (pathManager.isCommandEnabled("ignore")){
+            Map<UUID, List<String>> ignorelist = cache.getIgnorelist();
+            List<String> playerlist = players.getStringList("players." + player.getUniqueId().toString() + ".players-ignored");
+
+            if (!ignorelist.containsKey(uuid) && (!(playerlist.isEmpty()))) {
+                ignorelist.put(uuid, playerlist);
+            }
         }
 
         return true;

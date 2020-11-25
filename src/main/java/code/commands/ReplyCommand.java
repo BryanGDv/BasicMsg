@@ -1,11 +1,13 @@
 package code.commands;
 
 import code.CacheManager;
+import code.cache.UserCache;
 import code.modules.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.Manager;
 import code.modules.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
+import code.utils.PathManager;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -36,37 +38,36 @@ public class ReplyCommand implements CommandClass {
         ConfigManager files = manager.getFiles();
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
-        SoundManager sound = manager.getSounds();
+        SoundManager sound = manager.getManagingCenter().getSoundManager();
+        PathManager pathManager = manager.getPathManager();
 
         Configuration players = files.getPlayers();
-        Configuration config = files.getCommand();
+        Configuration config = files.getConfig();
         Configuration command = files.getCommand();
         Configuration lang = files.getMessages();
 
         UUID playeruuid = player.getUniqueId();
 
-        if (!(manager.getPathManager().isCommandEnabled("reply"))){
-            playersender.sendMessage(player, lang.getString("error.command-disabled")
-                    .replace("%player%", player.getName())
-                    .replace("%command%", "reply"));
-            playersender.sendMessage(player, "&e[!] &8| &fYou need to restart the server to activate o unactivate the command.");
+        if (!(pathManager.isCommandEnabled("reply"))) {
+            pathManager.sendDisabledCmdMessage(player, "reply");
             return true;
         }
 
+
         if (message.trim().isEmpty()) {
             playersender.sendMessage(player, lang.getString("error.no-arg"));
-            playersender.sendMessage(player, "&8- &fUsage: &a/reply [message]");
+            pathManager.getUsage(player, "reply",  "<message>");
             sound.setSound(player.getUniqueId(), "sounds.error");
 
             return true;
         }
 
 
-        Map<UUID, UUID> reply = cache.getReply();
+        UserCache playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
 
-        if (cache.getReply().containsKey(player.getUniqueId())) {
+        if (playerCache.hasRepliedPlayer()){
 
-            OfflinePlayer target = Bukkit.getPlayer(reply.get(player.getUniqueId()));
+            OfflinePlayer target = Bukkit.getPlayer(playerCache.getRepliedPlayer());
 
             if (message.equalsIgnoreCase("-player")){
                 playersender.sendMessage(player, command.getString("commands.msg-reply.talked")
@@ -81,10 +82,11 @@ public class ReplyCommand implements CommandClass {
                 message = PlayerStatic.setColor(message);
             }
 
-            playersender.sendMessage(player, PlayerStatic.setColor(command.getString ("commands.msg-reply.player")
+            playersender.sendMessage(player, PlayerStatic.setColor(command.getString("commands.msg-reply.player")
                     .replace("%player%", player.getName())
                     .replace("%arg-1%", target.getName()))
                     , message, true);
+
             sound.setSound(player.getUniqueId(), "sounds.on-reply");
 
             List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
@@ -94,8 +96,13 @@ public class ReplyCommand implements CommandClass {
                                 .replace("%player%", player.getName())
                                 .replace("%arg-1%", target.getName()))
                         , message, true);
-                reply.replace(reply.get(player.getUniqueId()), player.getUniqueId());
+
+                UserCache targetCache = manager.getCache().getPlayerUUID().get(target.getUniqueId());
+
+                targetCache.setRepliedPlayer(playeruuid);
+
                 sound.setSound(player.getUniqueId(), "sounds.on-reply");
+
             }
 
         } else {
