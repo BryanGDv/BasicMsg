@@ -1,13 +1,13 @@
 package code.commands;
 
 import code.CacheManager;
-import code.cache.UserCache;
-import code.modules.player.PlayerStatic;
+import code.cache.UserData;
+import code.methods.player.PlayerStatic;
 import code.registry.ConfigManager;
 import code.Manager;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 import code.utils.Configuration;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class ReplyCommand implements CommandClass {
@@ -39,7 +38,7 @@ public class ReplyCommand implements CommandClass {
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         Configuration players = files.getPlayers();
         Configuration config = files.getConfig();
@@ -48,22 +47,22 @@ public class ReplyCommand implements CommandClass {
 
         UUID playeruuid = player.getUniqueId();
 
-        if (!(pathManager.isCommandEnabled("reply"))) {
-            pathManager.sendDisabledCmdMessage(player, "reply");
+        if (!(moduleCheck.isCommandEnabled("reply"))) {
+            moduleCheck.sendDisableMessage(player, "reply");
             return true;
         }
 
 
         if (message.trim().isEmpty()) {
             playersender.sendMessage(player, lang.getString("error.no-arg"));
-            pathManager.getUsage(player, "reply",  "<message>");
+            moduleCheck.getUsage(player, "reply",  "<message>");
             sound.setSound(player.getUniqueId(), "sounds.error");
 
             return true;
         }
 
 
-        UserCache playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
+        UserData playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
 
         if (playerCache.hasRepliedPlayer()){
 
@@ -97,7 +96,7 @@ public class ReplyCommand implements CommandClass {
                                 .replace("%arg-1%", target.getName()))
                         , message, true);
 
-                UserCache targetCache = manager.getCache().getPlayerUUID().get(target.getUniqueId());
+                UserData targetCache = manager.getCache().getPlayerUUID().get(target.getUniqueId());
 
                 targetCache.setRepliedPlayer(playeruuid);
 

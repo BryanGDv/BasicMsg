@@ -2,9 +2,10 @@ package code.registry;
 
 import code.BasicMsg;
 import code.debug.DebugLogger;
-import code.events.*;
+import code.listeners.*;
 import code.Manager;
-import code.modules.click.ChatClickMethod;
+import code.listeners.format.ChatFormat;
+import code.methods.click.ChatClickMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 

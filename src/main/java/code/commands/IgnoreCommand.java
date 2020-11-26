@@ -1,11 +1,11 @@
 package code.commands;
 
 import code.CacheManager;
-import code.modules.IgnoreMethod;
+import code.methods.commands.IgnoreMethod;
 import code.registry.ConfigManager;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 
@@ -13,13 +13,10 @@ import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import code.utils.Configuration;
 import code.Manager;
-import sun.misc.Cache;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,7 +40,7 @@ public class IgnoreCommand implements CommandClass{
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         Configuration players = files.getPlayers();
         Configuration command = files.getCommand();
@@ -52,15 +49,15 @@ public class IgnoreCommand implements CommandClass{
 
         UUID playeruuid = player.getUniqueId();
 
-        if (!(pathManager.isCommandEnabled("ignore"))) {
-            pathManager.sendDisabledCmdMessage(player, "ignore");
+        if (!(moduleCheck.isCommandEnabled("ignore"))) {
+            moduleCheck.sendDisableMessage(player, "ignore");
             return true;
         }
 
 
         if (target == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "ignore", "<player>");
+            moduleCheck.getUsage(player, "ignore", "<player>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }

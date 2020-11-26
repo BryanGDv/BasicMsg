@@ -2,7 +2,7 @@ package code.api;
 
 import code.CacheManager;
 import code.Manager;
-import code.cache.UserCache;
+import code.cache.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -14,7 +14,7 @@ public class BasicAPI{
 
     private final CacheManager cache;
 
-    private final Map<UUID, UserCache> userCacheMap;
+    private final Map<UUID, UserData> userCacheMap;
 
 
     private final String pluginname = "BasicMsg";
@@ -59,7 +59,7 @@ public class BasicAPI{
     public List<String> getSpyList(){
         List<String> socialspyList = new ArrayList<>();
 
-        for (UserCache cache : userCacheMap.values()) {
+        for (UserData cache : userCacheMap.values()) {
             if (cache.isSocialSpyMode()) {
                 socialspyList.add(cache.getPlayer().getName());
             }
@@ -71,7 +71,7 @@ public class BasicAPI{
     public List<String> getMsgToggleList(){
         List<String> msgToggle = new ArrayList<>();
 
-        for (UserCache cache : userCacheMap.values()) {
+        for (UserData cache : userCacheMap.values()) {
             if (cache.isMsgtoggleMode()) {
                 msgToggle.add(cache.getPlayer().getName());
             }

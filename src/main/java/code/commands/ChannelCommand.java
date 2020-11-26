@@ -2,20 +2,18 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.SoundManager;
-import code.cache.UserCache;
-import code.modules.GroupMethod;
-import code.modules.ListenerManaging;
-import code.modules.player.PlayerMessage;
+import code.cache.UserData;
+import code.methods.GroupMethod;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.UUID;
 
 public class ChannelCommand implements CommandClass {
@@ -33,7 +31,7 @@ public class ChannelCommand implements CommandClass {
         GroupMethod groupChannel = manager.getPlayerMethods().getGroupMethod();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         ConfigManager files = manager.getFiles();
 
@@ -41,8 +39,8 @@ public class ChannelCommand implements CommandClass {
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(pathManager.isCommandEnabled("channel"))) {
-            pathManager.sendDisabledCmdMessage(player, "channel");
+        if (!(moduleCheck.isCommandEnabled("channel"))) {
+            moduleCheck.sendDisableMessage(player, "channel");
             return true;
         }
 
@@ -50,18 +48,18 @@ public class ChannelCommand implements CommandClass {
 
         if (arg1 == null){
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "channel" , "join, quit, list");
+            moduleCheck.getUsage(player, "channel" , "join, quit, list");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
 
 
 
-        UserCache userCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
+        UserData userData = manager.getCache().getPlayerUUID().get(player.getUniqueId());
         if (arg1.equalsIgnoreCase("join")){
             if (arg2 == null){
                 playersender.sendMessage(player, messages.getString("error.no-arg"));
-                pathManager.getUsage(player, "channel" , arg1, "<channel>");
+                moduleCheck.getUsage(player, "channel" , arg1, "<channel>");
                 sound.setSound(playeruuid, "sounds.error");
                 return true;
             }
@@ -79,9 +77,9 @@ public class ChannelCommand implements CommandClass {
             }
 
 
-            if (userCache.equalsChannelGroup(arg2)){
+            if (userData.equalsChannelGroup(arg2)){
                 playersender.sendMessage(player, messages.getString("error.channel.joined")
-                        .replace("%rank%", userCache.getChannelGroup()));
+                        .replace("%rank%", userData.getChannelGroup()));
                 sound.setSound(playeruuid, "sounds.error");
                 return true;
             }
@@ -92,24 +90,24 @@ public class ChannelCommand implements CommandClass {
             }
 
             playersender.sendMessage(player, command.getString("commands.channel.player.left")
-                    .replace("%beforechannel%", userCache.getChannelGroup())
+                    .replace("%beforechannel%", userData.getChannelGroup())
                     .replace("%afterchannel%", arg2));
 
-            userCache.setChannelGroup(arg2);
+            userData.setChannelGroup(arg2);
             playersender.sendMessage(player, command.getString("commands.channel.player.join")
-                    .replace("%channel%", userCache.getChannelGroup()));
+                    .replace("%channel%", userData.getChannelGroup()));
             return true;
         }
         if (arg1.equalsIgnoreCase("quit")) {
 
-            if (userCache.equalsChannelGroup("default")){
+            if (userData.equalsChannelGroup("default")){
                 playersender.sendMessage(player, messages.getString("error.channel.default"));
                 return true;
             }
 
             playersender.sendMessage(player, command.getString("commands.channel.player.left")
-                    .replace("%channel%", userCache.getChannelGroup()));
-            userCache.setChannelGroup(arg2);
+                    .replace("%channel%", userData.getChannelGroup()));
+            userData.setChannelGroup(arg2);
             return true;
         }
 
@@ -137,7 +135,7 @@ public class ChannelCommand implements CommandClass {
             return true;
         }else{
             playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-            pathManager.getUsage(player, "bmsg" , "join, quit, list");
+            moduleCheck.getUsage(player, "bmsg" , "join, quit, list");
         }
         return true;
     }

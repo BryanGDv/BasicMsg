@@ -3,12 +3,13 @@ package code.commands.modules;
 import code.Manager;
 import code.utils.Configuration;
 import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.bukkit.BukkitDefaultTranslationProvider;
 import me.fixeddev.commandflow.translator.TranslationProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomLanguage implements TranslationProvider {
+public class CustomLanguage extends BukkitDefaultTranslationProvider {
 
     private final Manager manager;
 

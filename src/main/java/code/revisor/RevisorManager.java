@@ -1,11 +1,14 @@
 package code.revisor;
 
 import code.Manager;
-import code.utils.PathManager;
+import code.revisor.message.FloodRevisor;
+import code.revisor.message.WordRevisor;
+import code.revisor.message.DotRevisor;
+import code.revisor.message.LinkRevisor;
+import code.utils.module.ModuleCheck;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import sun.awt.image.ImageWatched;
 
 import java.util.UUID;
 
@@ -15,20 +18,20 @@ public class RevisorManager{
     private Manager manager;
 
     private static Plugin plugin;
-    private static PathManager path;
+    private static ModuleCheck path;
 
-    private final AntiRepeatRevisor antiRepeatRevisor;
-    private final AntiFloodRevisor antiFloodRevisor;
-    private final BadWordsRevisor badWordsRevisor;
+    private final CooldownData cooldownData;
+    private final FloodRevisor floodRevisor;
+    private final WordRevisor wordRevisor;
     private final LinkRevisor linkRevisor;
     private final DotRevisor dotRevisor;
 
     public RevisorManager(Manager manager) {
         this.manager = manager;
         manager.getListManager().getModules().add("chat_revisor");
-        antiRepeatRevisor = new AntiRepeatRevisor(manager);
-        antiFloodRevisor = new AntiFloodRevisor(manager);
-        badWordsRevisor = new BadWordsRevisor(manager);
+        cooldownData = new CooldownData(manager);
+        floodRevisor = new FloodRevisor(manager);
+        wordRevisor = new WordRevisor(manager);
         linkRevisor = new LinkRevisor(manager);
         dotRevisor = new DotRevisor(manager);
         plugin = manager.getPlugin();
@@ -42,37 +45,35 @@ public class RevisorManager{
 
         Player player = Bukkit.getPlayer(uuid);
 
-        if (AntiRepeatRevisor.isSpamming(uuid)) {
-            return null;
-        }
-
-        message = AntiFloodRevisor.revisor(player, message);
-
         if (message == null){
             return null;
         }
 
-        message = BadWordsRevisor.revisor(player, message);
+        if (CooldownData.isSpamming(uuid)) {
+            return null;
+        }
 
-        message = LinkRevisor.revisor(player, message);
+        message = FloodRevisor.check(player, message);
+        message = WordRevisor.check(player, message);
+        message = LinkRevisor.check(player, message);
 
-        return DotRevisor.revisor(message);
+        return DotRevisor.check(message);
     }
 
     public LinkRevisor getLinkRevisor() {
         return linkRevisor;
     }
 
-    public AntiFloodRevisor getAntiFloodRevisor() {
-        return antiFloodRevisor;
+    public FloodRevisor getAntiFloodRevisor() {
+        return floodRevisor;
     }
 
-    public AntiRepeatRevisor getAntiRepeatRevisor() {
-        return antiRepeatRevisor;
+    public CooldownData getAntiRepeatRevisor() {
+        return cooldownData;
     }
 
-    public BadWordsRevisor getBadWordsRevisor() {
-        return badWordsRevisor;
+    public WordRevisor getBadWordsRevisor() {
+        return wordRevisor;
     }
 
     public DotRevisor getDotRevisor() {

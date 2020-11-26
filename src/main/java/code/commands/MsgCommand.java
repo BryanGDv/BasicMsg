@@ -2,14 +2,14 @@ package code.commands;
 
 import code.CacheManager;
 import code.bukkitutils.gui.manager.GuiManager;
-import code.cache.UserCache;
-import code.modules.MsgMethod;
-import code.modules.ReplyMethod;
-import code.modules.player.PlayerStatic;
+import code.cache.UserData;
+import code.methods.commands.MsgMethod;
+import code.methods.commands.ReplyMethod;
+import code.methods.player.PlayerStatic;
 import code.registry.ConfigManager;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 import code.utils.Configuration;
 import code.Manager;
 
-import java.util.List;
 import java.util.UUID;
 
 public class MsgCommand implements CommandClass{
@@ -43,7 +42,7 @@ public class MsgCommand implements CommandClass{
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
         
         Configuration players = files.getPlayers();
         Configuration config = files.getConfig();
@@ -52,14 +51,14 @@ public class MsgCommand implements CommandClass{
 
         UUID playeruuid = player.getUniqueId();
 
-        if (!(pathManager.isCommandEnabled("msg"))) {
-            pathManager.sendDisabledCmdMessage(player, "msg");
+        if (!(moduleCheck.isCommandEnabled("msg"))) {
+            moduleCheck.sendDisableMessage(player, "msg");
             return true;
         }
 
         if (target == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "msg", "<player>", "<message>");
+            moduleCheck.getUsage(player, "msg", "<player>", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -80,15 +79,18 @@ public class MsgCommand implements CommandClass{
 
         }
 
-        if (target.getName().equalsIgnoreCase("-test")){
-            GuiManager guiManager = manager.getManagingCenter().getGuiManager();
+        if (target.getName().equalsIgnoreCase("-online")){
+            if (Bukkit.getServer().getOnlinePlayers().size() < 2) {
+                playersender.sendMessage(player, messages.getString("error.nobody-offline"));
+                return true;
+            }
 
+            GuiManager guiManager = manager.getManagingCenter().getGuiManager();
             guiManager.openInventory(playeruuid, "online", 0);
-            System.out.println("test");
             return true;
         }
 
-        UserCache playerMsgToggle = manager.getCache().getPlayerUUID().get(playeruuid);
+        UserData playerMsgToggle = manager.getCache().getPlayerUUID().get(playeruuid);
 
         if (target.getName().equalsIgnoreCase("-toggle")){
 
@@ -117,7 +119,7 @@ public class MsgCommand implements CommandClass{
                     return true;
                 }
 
-                UserCache targetMsgToggle = manager.getCache().getPlayerUUID().get(you.getUniqueId());
+                UserData targetMsgToggle = manager.getCache().getPlayerUUID().get(you.getUniqueId());
                 CommandSender yousender =  you.getPlayer();
 
                 if (!(targetMsgToggle.isMsgtoggleMode())){
@@ -136,11 +138,11 @@ public class MsgCommand implements CommandClass{
             return true;
         }
 
-        UserCache targetToggled = manager.getCache().getPlayerUUID().get(targetuuid);
+        UserData targetToggled = manager.getCache().getPlayerUUID().get(targetuuid);
 
         if (targetToggled == null){
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "msg", "<player>", "<message>");
+            moduleCheck.getUsage(player, "msg", "<player>", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -153,7 +155,7 @@ public class MsgCommand implements CommandClass{
 
         if (msg.trim().isEmpty()) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "msg", "<player>", "<message>");
+            moduleCheck.getUsage(player, "msg", "<player>", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -170,7 +172,7 @@ public class MsgCommand implements CommandClass{
         msgMethod.sendPrivateMessage(player, targetplayer, message);
 
         for (Player watcher : Bukkit.getServer().getOnlinePlayers()) {
-            UserCache watcherSpy = manager.getCache().getPlayerUUID().get(watcher.getUniqueId());
+            UserData watcherSpy = manager.getCache().getPlayerUUID().get(watcher.getUniqueId());
 
             if (watcherSpy.isSocialSpyMode()){
                 playersender.sendMessage(watcher, command.getString ("commands.socialspy.spy")

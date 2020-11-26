@@ -1,33 +1,29 @@
 package code;
 
 import code.bukkitutils.ManagingCenter;
-import code.bukkitutils.WorldManager;
 import code.debug.DebugLogger;
-import code.modules.MethodManager;
+import code.methods.MethodManager;
 import code.registry.CommandRegistry;
 import code.registry.ConfigManager;
 import code.registry.EventManager;
 import code.revisor.RevisorManager;
-import code.bukkitutils.SoundManager;
-import code.utils.ListManager;
-import code.utils.PathManager;
-import code.utils.VariableManager;
-
-import java.nio.file.Path;
+import code.utils.module.ModuleCreator;
+import code.utils.module.ModuleCheck;
+import code.utils.StringFormat;
 
 
 public class Manager {
 
     private final BasicMsg plugin;
 
-    private VariableManager variables;
+    private StringFormat variables;
     private MethodManager methodManager;
 
     private DebugLogger debug;
 
 
-    private ListManager listManager;
-    private PathManager pathmanager;
+    private ModuleCreator moduleCreator;
+    private ModuleCheck pathmanager;
 
     private CommandRegistry commandRegistry;
     private EventManager eventManager;
@@ -53,13 +49,13 @@ public class Manager {
         configManager = new ConfigManager(plugin, this);
         configManager.setup();
 
-        listManager = new ListManager(this);
+        moduleCreator = new ModuleCreator(this);
 
-        pathmanager = new PathManager(this);
+        pathmanager = new ModuleCheck(this);
 
         managingCenter = new ManagingCenter(this);
 
-        variables = new VariableManager(configManager, this);
+        variables = new StringFormat(configManager, this);
 
         methodManager = new MethodManager(this);
         methodManager.setup();
@@ -78,17 +74,17 @@ public class Manager {
         return managingCenter;
     }
 
-    public ListManager getListManager(){
-        return listManager;
+    public ModuleCreator getListManager(){
+        return moduleCreator;
     }
-    public PathManager getPathManager(){
+    public ModuleCheck getPathManager(){
         return pathmanager;
     }
     public DebugLogger getLogs(){
         return debug;
     }
 
-    public VariableManager getVariables(){
+    public StringFormat getVariables(){
         return variables;
     }
 

@@ -1,6 +1,6 @@
 package code;
 
-import code.cache.UserCache;
+import code.cache.UserData;
 import code.debug.DebugLogger;
 import code.utils.Configuration;
 
@@ -12,7 +12,7 @@ public class CacheManager{
     private final Map<UUID, List<String>> ignoreCache = new HashMap<>();
     private final Map<String, Configuration> config = new HashMap<>();
 
-    private final Map<UUID, UserCache> playeruuid = new HashMap<>();
+    private final Map<UUID, UserData> playeruuid = new HashMap<>();
 
     private final Manager manager;
 
@@ -25,7 +25,7 @@ public class CacheManager{
 
 
     }
-    public Map<UUID, UserCache> getPlayerUUID() {
+    public Map<UUID, UserData> getPlayerUUID() {
         return playeruuid;
     }
 

@@ -1,11 +1,10 @@
 package code;
 
-import code.cache.UserCache;
+import code.cache.UserData;
 import code.utils.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,14 +21,14 @@ public class RecoverStats {
 
     public void setup(){
         Configuration players = manager.getFiles().getPlayers();
-        Map<UUID, UserCache> hashMap = manager.getCache().getPlayerUUID();
+        Map<UUID, UserData> hashMap = manager.getCache().getPlayerUUID();
 
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 
             UUID playeruuid = player.getUniqueId();
             List<String> ignoredlist = players.getStringList("players." + playeruuid + ".players-ignored");
 
-            hashMap.put(playeruuid, new UserCache(playeruuid));
+            hashMap.put(playeruuid, new UserData(playeruuid));
 
             if (ignoredlist == null){
                 return;

@@ -2,13 +2,12 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.SoundManager;
-import code.cache.UserCache;
-import code.modules.HelpOpMethod;
-import code.modules.player.PlayerMessage;
+import code.cache.UserData;
+import code.methods.commands.HelpOpMethod;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
-import code.utils.VariableManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -38,15 +37,15 @@ public class HelpopCommand implements CommandClass{
         HelpOpMethod helpOpMethod = manager.getPlayerMethods().getHelpOpMethod();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
 
-        if (!(pathManager.isCommandEnabled("helpop"))) {
-            pathManager.sendDisabledCmdMessage(player, "helpop");
+        if (!(moduleCheck.isCommandEnabled("helpop"))) {
+            moduleCheck.sendDisableMessage(player, "helpop");
             return true;
         }
 
@@ -55,7 +54,7 @@ public class HelpopCommand implements CommandClass{
 
         if (args.trim().isEmpty()) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "helpop", "<message>");
+            moduleCheck.getUsage(player, "helpop", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -65,7 +64,7 @@ public class HelpopCommand implements CommandClass{
             List<String> helpopList = new ArrayList<>();
 
             for (Player playeronline : Bukkit.getServer().getOnlinePlayers()) {
-                UserCache onlineCache = manager.getCache().getPlayerUUID().get(playeronline.getUniqueId());
+                UserData onlineCache = manager.getCache().getPlayerUUID().get(playeronline.getUniqueId());
                 if (playeronline.hasPermission(config.getString("config.perms.helpop-watch")) && onlineCache.isPlayerHelpOp()){
                     helpopList.add(playeronline.getName());
                 }
@@ -85,7 +84,7 @@ public class HelpopCommand implements CommandClass{
             return true;
         }
 
-        UserCache playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
+        UserData playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
 
         if (args.equalsIgnoreCase("-on")){
             if (!(player.hasPermission(config.getString("config.perms.helpop-watch")))){
@@ -138,7 +137,7 @@ public class HelpopCommand implements CommandClass{
                 .replace("%player%", player.getName()));
 
         for (Player playeronline : Bukkit.getServer().getOnlinePlayers()) {
-            UserCache onlineCache = manager.getCache().getPlayerUUID().get(playeronline.getUniqueId());
+            UserData onlineCache = manager.getCache().getPlayerUUID().get(playeronline.getUniqueId());
 
             if (playeronline.hasPermission(config.getString("config.perms.helpop-watch")) && onlineCache.isPlayerHelpOp()) {
                 playersender.sendMessage(playeronline.getPlayer(), command.getString("commands.helpop.message")

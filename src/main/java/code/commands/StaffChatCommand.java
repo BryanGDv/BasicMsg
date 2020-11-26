@@ -2,14 +2,12 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.SoundManager;
-import code.cache.UserCache;
-import code.modules.HelpOpMethod;
-import code.modules.StaffChatMethod;
-import code.modules.player.PlayerMessage;
+import code.cache.UserData;
+import code.methods.commands.StaffChatMethod;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
-import code.utils.VariableManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -36,15 +34,15 @@ public class StaffChatCommand  implements CommandClass{
         StaffChatMethod staffChatMethod = manager.getPlayerMethods().getStaffChatMethod();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
 
-        if (!(pathManager.isCommandEnabled("socialspy"))) {
-            pathManager.sendDisabledCmdMessage(player, "socialspy");
+        if (!(moduleCheck.isCommandEnabled("socialspy"))) {
+            moduleCheck.sendDisableMessage(player, "socialspy");
             return true;
         }
 
@@ -63,7 +61,7 @@ public class StaffChatCommand  implements CommandClass{
             return true;
         }
 
-        UserCache playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
+        UserData playerCache = manager.getCache().getPlayerUUID().get(player.getUniqueId());
 
         if (args.equalsIgnoreCase("-on")){
             if (playerCache.isStaffchatMode()){

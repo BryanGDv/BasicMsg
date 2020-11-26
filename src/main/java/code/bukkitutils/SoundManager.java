@@ -2,16 +2,15 @@ package code.bukkitutils;
 
 import code.CacheManager;
 import code.Manager;
-import code.cache.UserCache;
+import code.cache.UserData;
 import code.debug.DebugLogger;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.utils.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class SoundManager{
@@ -59,7 +58,7 @@ public class SoundManager{
             return;
         }
 
-        UserCache playerMsgToggle = manager.getCache().getPlayerUUID().get(target);
+        UserData playerMsgToggle = manager.getCache().getPlayerUUID().get(target);
         if (!(playerMsgToggle.isPlayersoundMode())){
             return;
         }

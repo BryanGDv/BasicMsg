@@ -5,22 +5,16 @@ import code.bukkitutils.RunnableManager;
 import code.bukkitutils.gui.manager.GuiData;
 import code.bukkitutils.gui.manager.GuiManager;
 import code.bukkitutils.other.PageUUIDManager;
-import code.cache.UserCache;
-import code.modules.player.PlayerStatic;
+import code.cache.UserData;
+import code.methods.player.PlayerStatic;
 import code.utils.Configuration;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
-import me.fixeddev.commandflow.annotated.annotation.Command;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.sql.Array;
 import java.util.*;
 
 public class OnlineSample {
@@ -114,7 +108,7 @@ public class OnlineSample {
         }
 
         HumanEntity playersender = event.getWhoClicked();
-        UserCache userCache = manager.getCache().getPlayerUUID().get(playersender.getUniqueId());
+        UserData userData = manager.getCache().getPlayerUUID().get(playersender.getUniqueId());
 
         ItemMeta item = event.getCurrentItem().getItemMeta();
         RunnableManager runnableManager = manager.getManagingCenter().getRunnableManager();
@@ -126,19 +120,19 @@ public class OnlineSample {
 
         if (item.getDisplayName().equalsIgnoreCase(previousName)){
             event.getWhoClicked().closeInventory();
-            userCache.changePage(userCache.getPage() - 1);
-            manager.getPlugin().getLogger().info("Page-: " + userCache.getPage());
-            guiManager.openInventory(playersender.getUniqueId(), "online", userCache.getPage());
+            userData.changePage(userData.getPage() - 1);
+            manager.getPlugin().getLogger().info("Page-: " + userData.getPage());
+            guiManager.openInventory(playersender.getUniqueId(), "online", userData.getPage());
         }
 
         if (item.getDisplayName().equalsIgnoreCase(nextName)){
-            userCache.setChangeInv(true);
+            userData.setChangeInv(true);
             event.getWhoClicked().closeInventory();
-            manager.getPlugin().getLogger().info("Page: " + userCache.getPage());
-            userCache.changePage(userCache.getPage() + 1);
-            manager.getPlugin().getLogger().info("Page+: " + userCache.getPage());
-            guiManager.openInventory(playersender.getUniqueId(), "online", userCache.getPage());
-            userCache.setChangeInv(false);
+            manager.getPlugin().getLogger().info("Page: " + userData.getPage());
+            userData.changePage(userData.getPage() + 1);
+            manager.getPlugin().getLogger().info("Page+: " + userData.getPage());
+            guiManager.openInventory(playersender.getUniqueId(), "online", userData.getPage());
+            userData.setChangeInv(false);
         }
 
         for (UUID uuid : listPlayers) {

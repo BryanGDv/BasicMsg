@@ -2,19 +2,18 @@ package code.commands;
 
 import code.CacheManager;
 import code.Manager;
-import code.modules.IgnoreMethod;
+import code.methods.commands.IgnoreMethod;
 import code.registry.ConfigManager;
 import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -39,21 +38,21 @@ public class UnIgnoreCommand implements CommandClass{
         IgnoreMethod ignore = manager.getPlayerMethods().getIgnoreMethod();
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
         SoundManager sound = manager.getManagingCenter().getSoundManager();
 
         Configuration players = files.getPlayers();
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(pathManager.isCommandEnabled("unignore"))) {
-            pathManager.sendDisabledCmdMessage(player, "unignore");
+        if (!(moduleCheck.isCommandEnabled("unignore"))) {
+            moduleCheck.sendDisableMessage(player, "unignore");
             return true;
         }
 
         if (target == null){
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "unignore", "<player>");
+            moduleCheck.getUsage(player, "unignore", "<player>");
             return true;
         }
         if (!(target.isOnline())){

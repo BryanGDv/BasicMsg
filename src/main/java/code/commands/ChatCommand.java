@@ -2,13 +2,12 @@ package code.commands;
 
 import code.BasicMsg;
 import code.Manager;
-import code.cache.UserCache;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.bukkitutils.SoundManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
-import code.utils.VariableManager;
+import code.utils.module.ModuleCheck;
+import code.utils.StringFormat;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -17,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class ChatCommand implements CommandClass{
@@ -38,9 +36,9 @@ public class ChatCommand implements CommandClass{
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
-        VariableManager variable = manager.getVariables();
+        StringFormat variable = manager.getVariables();
 
         Configuration config = files.getConfig();
         Configuration command = files.getCommand();
@@ -48,8 +46,8 @@ public class ChatCommand implements CommandClass{
         Configuration utils = files.getBasicUtils();
 
 
-        if (!(pathManager.isCommandEnabled("chat"))) {
-            pathManager.sendDisabledCmdMessage(player, "chat");
+        if (!(moduleCheck.isCommandEnabled("chat"))) {
+            moduleCheck.sendDisableMessage(player, "chat");
             return true;
         }
 
@@ -64,7 +62,7 @@ public class ChatCommand implements CommandClass{
 
         if (args == null) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "chat", "help, reload");
+            moduleCheck.getUsage(player, "chat", "help, reload");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }
@@ -85,7 +83,7 @@ public class ChatCommand implements CommandClass{
 
         }else{
             playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-            pathManager.getUsage(player, "chat", "help, reload");
+            moduleCheck.getUsage(player, "chat", "help, reload");
             sound.setSound(player.getUniqueId(), "sounds.error");
         }
 

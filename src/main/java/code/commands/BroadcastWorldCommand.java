@@ -2,11 +2,11 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.SoundManager;
-import code.modules.click.ChatMethod;
-import code.modules.player.PlayerMessage;
+import code.methods.click.ChatMethod;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
@@ -30,7 +30,7 @@ public class BroadcastWorldCommand implements CommandClass {
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         ConfigManager files = manager.getFiles();
 
@@ -38,8 +38,8 @@ public class BroadcastWorldCommand implements CommandClass {
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(pathManager.isCommandEnabled("broadcastworld"))) {
-            pathManager.sendDisabledCmdMessage(player, "broadcastworld");
+        if (!(moduleCheck.isCommandEnabled("broadcastworld"))) {
+            moduleCheck.sendDisableMessage(player, "broadcastworld");
             return true;
         }
 
@@ -52,7 +52,7 @@ public class BroadcastWorldCommand implements CommandClass {
 
         if (args.trim().isEmpty()) {
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "broadcastworld", "<message>");
+            moduleCheck.getUsage(player, "broadcastworld", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }

@@ -2,22 +2,19 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.SoundManager;
-import code.modules.click.ChatMethod;
-import code.modules.player.PlayerMessage;
+import code.methods.click.ChatMethod;
+import code.methods.player.PlayerMessage;
 import code.registry.ConfigManager;
 import code.utils.Configuration;
-import code.utils.PathManager;
-import com.avaje.ebean.validation.NotNull;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.annotated.annotation.Text;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
-import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class BroadcastCommand implements CommandClass {
@@ -34,7 +31,7 @@ public class BroadcastCommand implements CommandClass {
 
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
         SoundManager sound = manager.getManagingCenter().getSoundManager();
 
         ConfigManager files = manager.getFiles();
@@ -43,8 +40,8 @@ public class BroadcastCommand implements CommandClass {
         Configuration command = files.getCommand();
         Configuration messages = files.getMessages();
 
-        if (!(pathManager.isCommandEnabled("broadcast"))) {
-            pathManager.sendDisabledCmdMessage(player, "broadcast");
+        if (!(moduleCheck.isCommandEnabled("broadcast"))) {
+            moduleCheck.sendDisableMessage(player, "broadcast");
             return true;
         }
 
@@ -57,7 +54,7 @@ public class BroadcastCommand implements CommandClass {
 
         if (args.trim().isEmpty()){
             playersender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "broadcast", "<message>");
+            moduleCheck.getUsage(player, "broadcast", "<message>");
             sound.setSound(playeruuid, "sounds.error");
             return true;
         }

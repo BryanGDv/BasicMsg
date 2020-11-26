@@ -2,22 +2,22 @@ package code.commands;
 
 import code.Manager;
 import code.bukkitutils.other.PageManager;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.utils.Configuration;
-import code.utils.PathManager;
-import code.utils.VariableManager;
+import code.utils.module.ModuleCheck;
+import code.utils.StringFormat;
 import me.fixeddev.commandflow.annotated.CommandClass;
-import me.fixeddev.commandflow.annotated.annotation.Command;
-import me.fixeddev.commandflow.annotated.annotation.OptArg;
-import me.fixeddev.commandflow.annotated.annotation.Text;
+import me.fixeddev.commandflow.annotated.annotation.*;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.UUID;
 
 @Command(names = {"motd"})
+@ArgOrSub
+@Required
+
 public class MotdCommand implements CommandClass {
 
     private final Manager manager;
@@ -27,7 +27,7 @@ public class MotdCommand implements CommandClass {
     private final Configuration messages;
 
     private final PlayerMessage sender;
-    private final PathManager pathManager;
+    private final ModuleCheck moduleCheck;
     private final List<String> motd;
 
 
@@ -39,30 +39,33 @@ public class MotdCommand implements CommandClass {
         this.messages = manager.getFiles().getMessages();
 
         this.sender = manager.getPlayerMethods().getSender();
-        this.pathManager = manager.getPathManager();
+        this.moduleCheck = manager.getPathManager();
         this.motd = utils.getStringList("utils.join.motd.format");
     }
 
     @Command(names = "")
     // Por si preguntas del ("1") el hashmap comienza desde 0 :xd: asi que 0 es página 1.
-    public boolean onCommand(@Sender Player player, @OptArg("1") int page) {
+    public boolean onCommand(@Sender Player player, int page) {
 
-        VariableManager variable = manager.getVariables();
+        StringFormat variable = manager.getVariables();
 
-        if (!(pathManager.isCommandEnabled("motd"))) {
-            pathManager.sendDisabledCmdMessage(player, "motd");
+        if (!(moduleCheck.isCommandEnabled("motd"))) {
+            moduleCheck.sendDisableMessage(player, "motd");
             return true;
         }
 
-        if (page < 0){
+        if (page <= 0){
             sender.sendMessage(player, messages.getString("error.motd.negative-number")
                     .replace("%number%", String.valueOf(page)));
             return true;
         }
 
         PageManager pageManager = new PageManager(motd);
+        pageManager.getHashString().get(0).forEach(System.out::println);
+        Bukkit.broadcastMessage("page: " + page);
 
-        if (!(pageManager.pageExists(page - 1))){
+
+        if (!pageManager.pageExists(page - 1)){
             sender.sendMessage(player, messages.getString("error.motd.unknown-page")
                     .replace("%page%", String.valueOf(page)));
             return true;
@@ -90,7 +93,7 @@ public class MotdCommand implements CommandClass {
 
         if (text.isEmpty()){
             sender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "motd", "addline/removeline/setline");
+            moduleCheck.getUsage(player, "motd", "addline/removeline/setline");
             return true;
         }
 
@@ -146,7 +149,7 @@ public class MotdCommand implements CommandClass {
 
         if (text.isEmpty()){
             sender.sendMessage(player, messages.getString("error.no-arg"));
-            pathManager.getUsage(player, "motd", "addline/removeline/setline");
+            moduleCheck.getUsage(player, "motd", "addline/removeline/setline");
             return true;
         }
 
@@ -174,4 +177,5 @@ public class MotdCommand implements CommandClass {
         utils.save();
         return true;
     }
+
 }

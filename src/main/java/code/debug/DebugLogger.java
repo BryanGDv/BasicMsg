@@ -20,7 +20,6 @@ public class DebugLogger{
     }
 
     public void log(String string, int number) {
-
         switch (number) {
             case 0:
                 this.getLogger(string, "WARNING");

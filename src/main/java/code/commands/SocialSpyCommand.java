@@ -1,23 +1,20 @@
 package code.commands;
 
-import code.CacheManager;
-import code.cache.UserCache;
-import code.modules.SocialSpyMethod;
+import code.cache.UserData;
+import code.methods.commands.SocialSpyMethod;
 import code.registry.ConfigManager;
 import code.Manager;
-import code.modules.player.PlayerMessage;
+import code.methods.player.PlayerMessage;
 import code.bukkitutils.SoundManager;
-import code.utils.PathManager;
+import code.utils.module.ModuleCheck;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.bukkit.annotation.Sender;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import code.utils.Configuration;
-import sun.misc.Cache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +37,14 @@ public class SocialSpyCommand implements CommandClass{
         PlayerMessage playersender = manager.getPlayerMethods().getSender();
 
         SoundManager sound = manager.getManagingCenter().getSoundManager();
-        PathManager pathManager = manager.getPathManager();
+        ModuleCheck moduleCheck = manager.getPathManager();
 
         Configuration config = files.getConfig();
         Configuration messages = files.getMessages();
         Configuration command = files.getCommand();
 
-        if (!(pathManager.isCommandEnabled("socialspy"))) {
-            pathManager.sendDisabledCmdMessage(player, "socialspy");
+        if (!(moduleCheck.isCommandEnabled("socialspy"))) {
+            moduleCheck.sendDisableMessage(player, "socialspy");
             return true;
         }
 
@@ -67,14 +64,14 @@ public class SocialSpyCommand implements CommandClass{
             return true;
         }
 
-        UserCache playerSpy = manager.getCache().getPlayerUUID().get(player.getUniqueId());
+        UserData playerSpy = manager.getCache().getPlayerUUID().get(player.getUniqueId());
 
         if (args.equalsIgnoreCase("list")) {
             playersender.sendMessage(player, command.getString("commands.socialspy.space"));
 
             List<String> socialspyList = new ArrayList<>();
 
-            for (UserCache cache : manager.getCache().getPlayerUUID().values()) {
+            for (UserData cache : manager.getCache().getPlayerUUID().values()) {
                 if (cache.isSocialSpyMode()) {
                     socialspyList.add(cache.getPlayer().getName());
                 }
@@ -114,7 +111,7 @@ public class SocialSpyCommand implements CommandClass{
                     return true;
                 }
 
-                UserCache targetSpy = manager.getCache().getPlayerUUID().get(target.getUniqueId());
+                UserData targetSpy = manager.getCache().getPlayerUUID().get(target.getUniqueId());
                 String targetname = target.getName();
 
                 if (targetSpy.isSocialSpyMode()) {
@@ -152,7 +149,7 @@ public class SocialSpyCommand implements CommandClass{
                 }
 
                 String targetname = target.getName();
-                UserCache targetSpy = manager.getCache().getPlayerUUID().get(target.getUniqueId());
+                UserData targetSpy = manager.getCache().getPlayerUUID().get(target.getUniqueId());
 
                 if (!(targetSpy.isSocialSpyMode())){
                     playersender.sendMessage(player.getPlayer(), messages.getString("error.socialspy.arg-2-unactivated").replace("%arg-2%", targetname));
@@ -170,7 +167,7 @@ public class SocialSpyCommand implements CommandClass{
 
         } else {
             playersender.sendMessage(player, messages.getString("error.unknown-arg"));
-            pathManager.getUsage(player, "socialspy",  "on, off, list", "<player>");
+            moduleCheck.getUsage(player, "socialspy",  "on, off, list", "<player>");
             sound.setSound(player.getUniqueId(), "sounds.error");
 
         }
